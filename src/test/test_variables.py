@@ -36,7 +36,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_dict= json.loads(input_str)
 
         # Test
-        self.assertMultiLineEqual(expected, declare.input(input_dict))
+        self.assertMultiLineEqual(expected, declare.input_declaration(input_dict))
 
     
     def test_place_declaration(self):
@@ -66,10 +66,10 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_dict= json.loads(input_str)
 
         # Test
-        self.assertMultiLineEqual(expected, declare.input(input_dict))
+        self.assertMultiLineEqual(expected, declare.place_declaration(input_dict))
 
 
-    def test_transition_condition(self):
+    def test_transition_definition(self):
 
         # Json input
         input_str= """
@@ -103,10 +103,10 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_dict= json.loads(input_str)
 
         # Test
-        self.assertMultiLineEqual(expected, declare.input(input_dict))
+        self.assertMultiLineEqual(expected, declare.transition_definition(input_dict))
 
     
-    def test_stab_delaration(self):
+    def test_stab_definition(self):
 
        # Json input
         input_str= """
@@ -139,5 +139,5 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_dict= json.loads(input_str)
 
         # Test
-        self.assertMultiLineEqual(expected, declare.input(input_dict))
+        self.assertMultiLineEqual(expected, declare.stab_definition(input_dict))
 
