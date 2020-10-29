@@ -16,7 +16,7 @@ The program translates the json input into NuSMV code that performs the followin
 - Assign initial values to places and construct how they obtain next values based on the firing of transitions
 
 ## JSON Syntax
-It should be noted that terms like *inputs*, *places*, *transitions*, and *outputs* in this section are used to the names of such entities. 
+It should be noted that terms like *inputs*, *places*, *transitions*, and *outputs* in this section are used to represent the names of such entities. 
 
 
 ### 1- Places
