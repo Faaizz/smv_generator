@@ -26,8 +26,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected MuSMV
-        expected= """
-        I1: boolean;
+        expected= """I1: boolean;
         I2: {"1", "2", "3"};
         STATUS: {"stopped", "running"};
         """
@@ -57,8 +56,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= """
-        P1: boolean;
+        expected= """P1: boolean;
         P2: boolean;
         """
 
@@ -94,8 +92,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= """
-        T1:= (P1 & P2) & ( (I1 & I2 & !I4) | (I3 & !I4) ) & (!P3);  
+        expected= """T1:= (P1 & P2) & ( (I1 & I2 & !I4) | (I3 & !I4) ) & (!P3);  
         T2:= (P3) & ( (I4 & !I1 & !I2) | (I4 & !I3) ) & (!P1 & !P2);  
         """
 
@@ -131,8 +128,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         """ 
 
         # Expected NuSMV
-        expected= """
-        stab:= !(T1 | T2);
+        expected= """stab:= !(T1 | T2);
         """
 
         # Convert Json string to python dictionary
