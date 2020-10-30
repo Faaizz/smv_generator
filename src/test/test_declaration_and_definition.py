@@ -132,3 +132,134 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Test
         self.assertMultiLineEqual(expected, define.stab_definition(input_dict))
 
+    def test_define_set_output(self):
+
+        # Json input
+        input_str= """
+        {
+            "P1": [
+                ["O1", "O2"],
+                ["O3"]
+            ],
+            "P2":[
+                ["O2", "O3"],
+                ["O1", "O2"]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ]
+            
+        }
+        """
+
+        # Expected output
+        expected= "O1_set:= P1 | P3;\n" + \
+            "O2_set:= P1 | P2;\n" + "O3_set:= P2;\n"
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, define.set_output_definition(input_dict))
+
+
+    def test_define_reset_output(self):
+
+        # Json input
+        input_str= """
+        {
+            "P1": [
+                ["O1", "O2"],
+                ["O3"]
+            ],
+            "P2":[
+                ["O2", "O3"],
+                ["O1", "O2"]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ]
+            
+        }
+        """
+
+        # Expected output
+        expected= "O1_reset:= P2;\n" + \
+            "O2_reset:= P2 | P3;\n" + "O3_reset:= P1 | P2;\n"
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, define.reset_output_definition(input_dict))
+
+
+    def test_define_resultant_output(self):
+
+        # Json input
+        input_str= """
+        {
+            "P1": [
+                ["O1", "O2"],
+                ["O3"]
+            ],
+            "P2":[
+                ["O2", "O3"],
+                ["O1", "O2"]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ]
+            
+        }
+        """
+
+        # Expected output
+        expected= "O1:= O1_set & !O1_reset;\n" + \
+            "O2:= O2_set & !O2_reset;\n" + "O3:= O3_set & !O3_reset;\n"
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, define.resultant_output_definition(input_dict))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
