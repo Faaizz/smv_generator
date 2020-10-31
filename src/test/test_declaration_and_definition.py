@@ -269,22 +269,22 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Expected NuSMV
         expected= 'init(P1):= true;\n' + \
-            'next(P1):= case\n' + \
-            '   T1: true;\n' +\
-            '   T2: false;\n' +\
-            '   true: P1\n' + \
-            'esac;\n' + \
-            'init(P2):= true;\n' + \
-            'next(P2):= case\n' + \
-            '   T1: true;\n' +\
-            '   T2: false;\n' +\
-            '   true: P2\n' + \
-            'esac;\n' + \
+            'init(P2):= false;\n' + \
             'init(P3):= true;\n' + \
-            'next(P3):= case\n' + \
-            '   T2: true;\n' +\
+            'next(P1):= case\n' + \
             '   T1: false;\n' +\
-            '   true: P3\n' + \
+            '   T2: true;\n' +\
+            '   true: P1;\n' + \
+            'esac;\n' + \
+            'next(P2):= case\n' + \
+            '   T1: false;\n' +\
+            '   T2: true;\n' +\
+            '   true: P2;\n' + \
+            'esac;\n' + \
+            'next(P3):= case\n' + \
+            '   T1: true;\n' +\
+            '   T2: false;\n' +\
+            '   true: P3;\n' + \
             'esac;\n'
 
         # Convert Json string to python dictionary
