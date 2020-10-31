@@ -1,4 +1,4 @@
-![unit_test_workflow](https://github.com/Faaizz/smv_generator/workflows/Unit%20Testing/badge.svg)
+![unit_test_workflow](https://github.com/Faaizz/smv_generator/workflows/Unit%20Tests/badge.svg)
 
 # SMV Generator
 Python program to generate SMV language for Signal Interpreted Petri Net (SIPN) model checking from JSON representation of such model. 
