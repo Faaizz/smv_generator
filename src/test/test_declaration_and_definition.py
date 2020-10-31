@@ -3,8 +3,12 @@ from collections import OrderedDict
 
 import main.declare as declare
 import main.define as define
+import main.assign as assign
 
 class VariablesDeclarationTest(unittest.TestCase):
+
+    #================================================================
+    ## DECLARATIONS
 
     def test_input_declaration(self):
         
@@ -63,6 +67,9 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Test
         self.assertMultiLineEqual(expected, declare.place_declaration(input_dict))
 
+    
+    #================================================================
+    ## DEFINITIONS
 
     def test_transition_definition(self):
 
@@ -170,14 +177,124 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Test
         self.assertMultiLineEqual(expected, define.output_definition(input_dict))
 
+    #================================================================
+    ## ASSIGNMETS
+
+    def test_input_assignment(self):
+
+        # Json input
+        input_str= """
+        {
+            "I1": [
+                "boolean",
+                "false"
+            ],
+            "I2": [
+                ["1", "2", "3"],
+                "1"
+            ],
+            "STATUS": [
+                ["stopped", "running"],
+                "stopped"
+            ]
+            
+        }
+        """
+
+        # Expected NuSMV
+        expected= 'init(I1):= false;\n' + \
+            'next(I1):= case\n' + \
+            '   stab: {true, false};\n' +\
+            '   true: I1;\n' + \
+            'esac;\n' + \
+            'init(I1):= "1";\n' + \
+            'next(I2):= case\n' + \
+            '   stab: {"1", "2", "3"};\n' +\
+            '   true: I2;\n' + \
+            'esac;\n'+ \
+            'init(I1):= "stopped";\n' + \
+            'next(I3):= case\n' + \
+            '   stab: {"stopped", "running"};\n' +\
+            '   true: I3;\n' + \
+            'esac;\n'
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, assign.input_assignment(input_dict))
 
 
+    def test_place_assignment(self):
+        # Json input
+        places_str= """
+        {
+            "P1": [
+                ["O1", "O2"],
+                ["O3"]
+            ],
+            "P2":[
+                ["O2", "O3"],
+                ["O1", "O2"]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ],
+            "initial": [ "P1", "P3" ]
+            
+        }
+        """
 
+        transitions_str= """
+        {
+            "T1":[
+                ["P1", "P2"],
+                [
+                    [ ["I1", "I2"], ["I4"] ],
+                    [ ["I3"], ["I4"] ]
+                ],
+                ["P3"]
+            ],
+            "T2":[
+                ["P3"],
+                [
+                    [ ["I4"], ["I1", "I2"] ],
+                    [ ["I4"], ["I3"] ]
+                ],
+                ["P1", "P2"]
+            ]
+        }
+        """ 
 
+        # Expected NuSMV
+        expected= 'init(P1):= true;\n' + \
+            'next(P1):= case\n' + \
+            '   T1: true;\n' +\
+            '   T2: false;\n' +\
+            '   true: P1\n' + \
+            'esac;\n' + \
+            'init(P2):= true;\n' + \
+            'next(P2):= case\n' + \
+            '   T1: true;\n' +\
+            '   T2: false;\n' +\
+            '   true: P2\n' + \
+            'esac;\n' + \
+            'init(P3):= true;\n' + \
+            'next(P3):= case\n' + \
+            '   T2: true;\n' +\
+            '   T1: false;\n' +\
+            '   true: P3\n' + \
+            'esac;\n'
 
+        # Convert Json string to python dictionary
+        places_dict= json.loads(places_str, object_pairs_hook=OrderedDict)
+        transitions_dict= json.loads(transitions_str, object_pairs_hook=OrderedDict)
 
-
-
+        # Test
+        self.assertMultiLineEqual(
+            expected, assign.input_assignment(places_dict, transitions_dict)
+            )
 
 
 
