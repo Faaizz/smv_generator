@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 def transition_definition(in_dict):
     """Define transition firing conditions in NuSMV
 
@@ -125,3 +127,82 @@ def stab_definition(in_dict):
     out_str= out_str + ");\n"
 
     return out_str
+
+
+def output_definition(in_dict):
+    """Define output set/reset and equivalent condition in NuSMV
+
+    Parameters:
+    ----------
+    in_dict: dict
+
+    Returns:
+    -------
+    out_str: string
+    """
+
+    # Get set of outputs
+    output_set= set()
+
+    for key in list(in_dict):
+        for output in in_dict[key][0]:
+            output_set.add(output)
+        for output in in_dict[key][1]:
+            output_set.add(output)
+    
+    # Sort alphabetically
+    output_set= sorted(output_set)
+    
+    # Collate list of places for which each output is set/reset
+    output_dict= OrderedDict()
+
+    for output in output_set:
+        # Initialize list of places for which output is set/reset
+        output_dict[output]= [[],[]]
+
+        for key in list(in_dict):
+            # Add places for which output is set
+            if output in in_dict[key][0]:
+                output_dict[output][0].append(key)
+
+            # Add places for which output is reset
+            if output in in_dict[key][1]:
+                output_dict[output][1].append(key)
+
+    # Generate output string
+    set_output_str= "-- SET\n"
+    reset_output_str= "-- RESET\n"
+    output_str= "-- OUTPUT\n"
+
+    # Loop through output keys
+    for key in list(output_dict):
+        output= output_dict[key]
+
+        # Get set places
+        set_output_str= set_output_str +  key + "_set:= "
+        for idx_set,place_set in enumerate(output[0]):
+            # Not last item
+            if idx_set < len(output[0])-1:
+                set_output_str= set_output_str + output[0][idx_set] + " | "
+            # Last Item
+            else:
+                set_output_str= set_output_str + output[0][idx_set] + ";\n"
+
+        # Get reset places
+        reset_output_str= reset_output_str +  key + "_reset:= "
+        for idx_reset,place_reset in enumerate(output[1]):
+            # Not last item
+            if idx_reset < len(output[1])-1:
+                reset_output_str= reset_output_str + output[1][idx_reset] + " | "
+            # Last Item
+            else:
+                reset_output_str= reset_output_str + output[1][idx_reset] + ";\n"
+
+        # Compose output string
+        output_str= output_str + key + ":= " + key + "_set & !" + key + "_reset;\n" 
+
+    # Return
+    out_str= set_output_str + reset_output_str + output_str
+
+    return out_str
+
