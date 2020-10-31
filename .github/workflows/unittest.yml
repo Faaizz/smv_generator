@@ -1,4 +1,4 @@
-name: Python package
+name: Unit Testing
 
 on: [push]
 
@@ -16,9 +16,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Open source directory
-      run:  |
-        cd src
     - name: Run unittests
       run: |
         python -m unittest discover
+      working-directory: ./src
