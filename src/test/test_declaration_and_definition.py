@@ -34,7 +34,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
 
         # Test
-        self.assertEqual(expected, declare.input_declaration(input_dict))
+        self.assertMultiLineEqual(expected, declare.input_declaration(input_dict))
 
     
     def test_place_declaration(self):
@@ -61,7 +61,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
 
         # Test
-        self.assertEqual(expected, declare.place_declaration(input_dict))
+        self.assertMultiLineEqual(expected, declare.place_declaration(input_dict))
 
 
     def test_transition_definition(self):
@@ -154,13 +154,13 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected output
-        expected= "-- SET" + \
+        expected= "-- SET\n" + \
             "O1_set:= P1 | P3;\n" + \
             "O2_set:= P1 | P2;\n" + "O3_set:= P2;\n" + \
-            "-- RESET" + \
+            "-- RESET\n" + \
             "O1_reset:= P2;\n" + \
-            "O2_reset:= P2 | P3;\n" + "O3_reset:= P1 | P2;\n" + \
-            "-- OUTPUT" + \
+            "O2_reset:= P2 | P3;\n" + "O3_reset:= P1 | P3;\n" + \
+            "-- OUTPUT\n" + \
             "O1:= O1_set & !O1_reset;\n" + \
             "O2:= O2_set & !O2_reset;\n" + "O3:= O3_set & !O3_reset;\n"
 
