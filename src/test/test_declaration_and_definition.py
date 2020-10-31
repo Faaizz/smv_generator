@@ -51,15 +51,20 @@ class VariablesDeclarationTest(unittest.TestCase):
                 ["O3"]
             ],
             "P2":[
-                ["O3"],
+                ["O2", "O3"],
                 ["O1", "O2"]
-            ]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ],
+            "initial": [ "P1", "P3" ]
             
         }
         """
 
         # Expected NuSMV
-        expected= "P1: boolean;\n" + "P2: boolean;\n"
+        expected= "P1: boolean;\n" + "P2: boolean;\n" + "P3: boolean;\n"
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -155,7 +160,8 @@ class VariablesDeclarationTest(unittest.TestCase):
             "P3": [
                 ["O1"],
                 ["O2", "O3"]
-            ]
+            ],
+            "initial": [ "P1", "P3" ]
             
         }
         """
@@ -173,7 +179,7 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
-
+        
         # Test
         self.assertMultiLineEqual(expected, define.output_definition(input_dict))
 
@@ -202,20 +208,20 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= 'init(I1):= false;\n' + \
+        expected= 'init(I1):= FALSE;\n' + \
             'init(I2):= "1";\n' + \
             'init(STATUS):= "stopped";\n' + \
             'next(I1):= case\n' + \
-            '   stab: {true, false};\n' +\
-            '   true: I1;\n' + \
+            '   stab: {TRUE, FALSE};\n' +\
+            '   TRUE: I1;\n' + \
             'esac;\n' + \
             'next(I2):= case\n' + \
             '   stab: {"1", "2", "3"};\n' +\
-            '   true: I2;\n' + \
+            '   TRUE: I2;\n' + \
             'esac;\n'+ \
             'next(STATUS):= case\n' + \
             '   stab: {"stopped", "running"};\n' +\
-            '   true: STATUS;\n' + \
+            '   TRUE: STATUS;\n' + \
             'esac;\n'
 
         # Convert Json string to python dictionary
@@ -259,8 +265,12 @@ class VariablesDeclarationTest(unittest.TestCase):
             "T2":[
                 ["P3"],
                 [
-                    [ ["I4"], ["I1", "I2"] ],
-                    [ ["I4"], ["I3"] ]
+                    [ 
+                        ["I4"], ["I1", "I2"] 
+                    ],
+                    [ 
+                        ["I4"], ["I3"] 
+                    ]
                 ],
                 ["P1", "P2"]
             ]
@@ -268,23 +278,23 @@ class VariablesDeclarationTest(unittest.TestCase):
         """ 
 
         # Expected NuSMV
-        expected= 'init(P1):= true;\n' + \
-            'init(P2):= false;\n' + \
-            'init(P3):= true;\n' + \
+        expected= 'init(P1):= TRUE;\n' + \
+            'init(P2):= FALSE;\n' + \
+            'init(P3):= TRUE;\n' + \
             'next(P1):= case\n' + \
-            '   T1: false;\n' +\
-            '   T2: true;\n' +\
-            '   true: P1;\n' + \
+            '   T1: FALSE;\n' +\
+            '   T2: TRUE;\n' +\
+            '   TRUE: P1;\n' + \
             'esac;\n' + \
             'next(P2):= case\n' + \
-            '   T1: false;\n' +\
-            '   T2: true;\n' +\
-            '   true: P2;\n' + \
+            '   T1: FALSE;\n' +\
+            '   T2: TRUE;\n' +\
+            '   TRUE: P2;\n' + \
             'esac;\n' + \
             'next(P3):= case\n' + \
-            '   T1: true;\n' +\
-            '   T2: false;\n' +\
-            '   true: P3;\n' + \
+            '   T1: TRUE;\n' +\
+            '   T2: FALSE;\n' +\
+            '   TRUE: P3;\n' + \
             'esac;\n'
 
         # Convert Json string to python dictionary

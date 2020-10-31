@@ -23,13 +23,13 @@ def input_assignment(in_dict):
         if isinstance(in_dict[key][0], str):
             # Initialization
             init_str= init_str + "init({0}):= ".format(key) + \
-                in_dict[key][1] + ";\n"
+                in_dict[key][1].upper() + ";\n"
 
             # Assignment
             assign_str= assign_str + \
                 'next({0}):= case\n'.format(key) + \
-                '   stab: {true, false};\n' +\
-                '   true: {0};\n'.format(key) + \
+                '   stab: {TRUE, FALSE};\n' +\
+                '   TRUE: {0};\n'.format(key) + \
                 'esac;\n'
             
         # if type is not string
@@ -54,7 +54,7 @@ def input_assignment(in_dict):
             assign_str= assign_str + \
                 'next({0}):= case\n'.format(key) + \
                 '   stab: {0};\n'.format(assign_type) +\
-                '   true: {0};\n'.format(key) + \
+                '   TRUE: {0};\n'.format(key) + \
                 'esac;\n'
 
     # return
@@ -84,10 +84,10 @@ def place_assignment(places_dict, transitions_dict):
     for place_key,value in places_dict.items():
         if not (place_key == "initial"):
             # Initialization
-            initial= "false"
+            initial= "FALSE"
             # Check if marked by default
             if place_key in places_dict["initial"]:
-                initial= "true"
+                initial= "TRUE"
 
             init_str= init_str + "init({0}):= ".format(place_key) + \
                 initial + ";\n"
@@ -100,15 +100,15 @@ def place_assignment(places_dict, transitions_dict):
                 # Check if current place is a post-place of the current transition
                 if place_key in transitions_dict[trans_key][2]:
                     assign_str= assign_str + \
-                    '   {0}: true;\n'.format(trans_key)
+                    '   {0}: TRUE;\n'.format(trans_key)
 
                 # Check if current place is a pre-place of the current transition
                 if place_key in transitions_dict[trans_key][0]:
                     assign_str= assign_str + \
-                    '   {0}: false;\n'.format(trans_key)
+                    '   {0}: FALSE;\n'.format(trans_key)
 
             assign_str= assign_str + \
-                    '   true: {0};\n'.format(place_key) + \
+                    '   TRUE: {0};\n'.format(place_key) + \
                     'esac;\n'
 
 

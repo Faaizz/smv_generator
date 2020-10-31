@@ -55,8 +55,10 @@ def place_declaration(in_dict):
     out_str= ""
 
     # Loop through items
-    for key,value in in_dict.items():
-        temp= key + ": " + "boolean;\n"
-        out_str= out_str + temp
+    for key,value in in_dict.items(): 
+        # Skip the "initial" attribute of places
+        if not (key == "initial"):
+            temp= key + ": " + "boolean;\n"
+            out_str= out_str + temp
 
     return out_str

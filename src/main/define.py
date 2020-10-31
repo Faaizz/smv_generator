@@ -145,10 +145,12 @@ def output_definition(in_dict):
     output_set= set()
 
     for key in list(in_dict):
-        for output in in_dict[key][0]:
-            output_set.add(output)
-        for output in in_dict[key][1]:
-            output_set.add(output)
+        # Skip the "initial" attribute of places
+        if not (key == "initial"):
+            for output in in_dict[key][0]:
+                output_set.add(output)
+            for output in in_dict[key][1]:
+                output_set.add(output)
     
     # Sort alphabetically
     output_set= sorted(output_set)
@@ -176,6 +178,7 @@ def output_definition(in_dict):
 
     # Loop through output keys
     for key in list(output_dict):
+
         output= output_dict[key]
 
         # Get set places
