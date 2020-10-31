@@ -15,6 +15,10 @@ The program translates the json input into NuSMV code that performs the followin
 - Assign initial values to inputs and construct how they obtain next values
 - Assign initial values to places and construct how they obtain next values based on the firing of transitions
 
+## Requirements on the SIPN
+- All outputs must be set in at least one stable marking
+- All outputs must be reset in at least one stable marking
+
 ## JSON Syntax
 It should be noted that terms like *inputs*, *places*, *transitions*, and *outputs* in this section are used to represent the names of such entities. 
 
