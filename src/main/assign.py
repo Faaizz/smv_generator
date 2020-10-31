@@ -61,3 +61,58 @@ def input_assignment(in_dict):
     out_str= init_str + assign_str
     
     return out_str
+
+
+def place_assignment(places_dict, transitions_dict):
+    """Initialize and give assignment directives to places in NuSMV
+
+    Parameters:
+    ----------
+    places_dict: dict
+    transitions_dict: dict
+
+    Returns:
+    -------
+    out_str: string
+    """
+
+    # define initialization & assignment strings
+    init_str= ""
+    assign_str= ""
+
+    # Loop through places and initialize
+    for place_key,value in places_dict.items():
+        if not (place_key == "initial"):
+            # Initialization
+            initial= "false"
+            # Check if marked by default
+            if place_key in places_dict["initial"]:
+                initial= "true"
+
+            init_str= init_str + "init({0}):= ".format(place_key) + \
+                initial + ";\n"
+
+            # Assignment
+            assign_str= assign_str + \
+                    'next({0}):= case\n'.format(place_key) 
+            # Loop through transitions
+            for trans_key,value in transitions_dict.items():
+                # Check if current place is a post-place of the current transition
+                if place_key in transitions_dict[trans_key][2]:
+                    assign_str= assign_str + \
+                    '   {0}: true;\n'.format(trans_key)
+
+                # Check if current place is a pre-place of the current transition
+                if place_key in transitions_dict[trans_key][0]:
+                    assign_str= assign_str + \
+                    '   {0}: false;\n'.format(trans_key)
+
+            assign_str= assign_str + \
+                    '   true: {0};\n'.format(place_key) + \
+                    'esac;\n'
+
+
+    # return
+    out_str= init_str + assign_str
+
+    return out_str
