@@ -20,10 +20,12 @@ It should be noted that terms like *inputs*, *places*, *transitions*, and *outpu
 
 
 ### 1- Places
-The root json object must have a *places* attribute, which is an object itself. 
+The root json object must have a *places* attribute, which is an an itself. 
 This *places* object in turn contains an attribute to represent each place in the SIPN. 
 Subsequently, each SIPN place attribute is an array with 2 elements. 
-The first and second elements are arrays of outputs that should be set and reset at such place respectively.  
+The first and second elements are arrays of outputs that should be set and reset at such place respectively. 
+In addition, there's an *initial* attribute in the *places* object. 
+This attribute is an array that holds the places that are initially marked.  
 
 Illustration:
 
@@ -38,7 +40,8 @@ Illustration:
         "PLACE2":[
             ["OUTPUT3"],
             ["OUTPUT1", "OUTPUT2"]
-        ]
+        ],
+        "initial": [ "P1", "P3" ]
     }
 }
 ```
