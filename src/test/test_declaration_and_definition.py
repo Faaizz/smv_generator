@@ -203,19 +203,19 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Expected NuSMV
         expected= 'init(I1):= false;\n' + \
+            'init(I2):= "1";\n' + \
+            'init(STATUS):= "stopped";\n' + \
             'next(I1):= case\n' + \
             '   stab: {true, false};\n' +\
             '   true: I1;\n' + \
             'esac;\n' + \
-            'init(I1):= "1";\n' + \
             'next(I2):= case\n' + \
             '   stab: {"1", "2", "3"};\n' +\
             '   true: I2;\n' + \
             'esac;\n'+ \
-            'init(I1):= "stopped";\n' + \
-            'next(I3):= case\n' + \
+            'next(STATUS):= case\n' + \
             '   stab: {"stopped", "running"};\n' +\
-            '   true: I3;\n' + \
+            '   true: STATUS;\n' + \
             'esac;\n'
 
         # Convert Json string to python dictionary
@@ -293,7 +293,7 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Test
         self.assertMultiLineEqual(
-            expected, assign.input_assignment(places_dict, transitions_dict)
+            expected, assign.place_assignment(places_dict, transitions_dict)
             )
 
 
