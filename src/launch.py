@@ -51,12 +51,16 @@ VAR
 # Input Declaration
 declaration= declaration + """
 -- INPUTS
-""" + declare.input_declaration(input_dict["inputs"])
+""" + \
+"-- " + str(list(input_dict["inputs"])) + "\n" + \
+declare.input_declaration(input_dict["inputs"])
 
 # Place Declaration
 declaration= declaration + """ 
 -- PLACES
-""" + declare.place_declaration(input_dict["places"])
+""" + \
+"-- " + str(list(input_dict["places"])) + "\n" + \
+declare.place_declaration(input_dict["places"])
 
 
 
