@@ -48,15 +48,18 @@ class VariablesDeclarationTest(unittest.TestCase):
         {
             "P1": [
                 ["O1", "O2"],
-                ["O3"]
+                ["O3"],
+                ["Place 1 comment"]
             ],
             "P2":[
                 ["O2", "O3"],
-                ["O1", "O2"]
+                ["O1", "O2"],
+                ["Place 2 comment"]
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"]
+                ["O2", "O3"],
+                [""]
             ],
             "initial": [ "P1", "P3" ]
             
@@ -87,7 +90,8 @@ class VariablesDeclarationTest(unittest.TestCase):
                     [ ["I1", "I2"], ["I4"] ],
                     [ ["I3"], ["I4"] ]
                 ],
-                ["P3"]
+                ["P3"],
+                ["T1 comment"]
             ],
             "T2":[
                 ["P3"],
@@ -95,7 +99,8 @@ class VariablesDeclarationTest(unittest.TestCase):
                     [ ["I4"], ["I1", "I2"] ],
                     [ ["I4"], ["I3"] ]
                 ],
-                ["P1", "P2"]
+                ["P1", "P2"],
+                ["T2 comment"]
             ]
         }
         """
@@ -122,7 +127,8 @@ class VariablesDeclarationTest(unittest.TestCase):
                     [ ["I1", "I2"], ["I4"] ],
                     [ ["I3"], ["I4"] ]
                 ],
-                ["P3"]
+                ["P3"],
+                ["T1 comment"]
             ],
             "T2":[
                 ["P3"],
@@ -130,7 +136,8 @@ class VariablesDeclarationTest(unittest.TestCase):
                     [ ["I4"], ["I1", "I2"] ],
                     [ ["I4"], ["I3"] ]
                 ],
-                ["P1", "P2"]
+                ["P1", "P2"],
+                ["T2 comment"]
             ]
         }
         """ 
@@ -151,15 +158,18 @@ class VariablesDeclarationTest(unittest.TestCase):
         {
             "P1": [
                 ["O1", "O2"],
-                ["O3"]
+                ["O3"],
+                ["Place 1 comment"]
             ],
             "P2":[
                 ["O2", "O3"],
-                ["O1", "O2"]
+                ["O1", "O2"],
+                ["Place 2 comment"]
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"]
+                ["O2", "O3"],
+                [""]
             ],
             "initial": [ "P1", "P3" ]
             
@@ -237,15 +247,18 @@ class VariablesDeclarationTest(unittest.TestCase):
         {
             "P1": [
                 ["O1", "O2"],
-                ["O3"]
+                ["O3"],
+                ["Place 1 comment"]
             ],
             "P2":[
                 ["O2", "O3"],
-                ["O1", "O2"]
+                ["O1", "O2"],
+                ["Place 2 comment"]
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"]
+                ["O2", "O3"],
+                ["Place 3 comment"]
             ],
             "initial": [ "P1", "P3" ]
             
@@ -260,7 +273,8 @@ class VariablesDeclarationTest(unittest.TestCase):
                     [ ["I1", "I2"], ["I4"] ],
                     [ ["I3"], ["I4"] ]
                 ],
-                ["P3"]
+                ["P3"],
+                ["T1 comment"]
             ],
             "T2":[
                 ["P3"],
@@ -272,7 +286,8 @@ class VariablesDeclarationTest(unittest.TestCase):
                         ["I4"], ["I3"] 
                     ]
                 ],
-                ["P1", "P2"]
+                ["P1", "P2"],
+                ["T2 comment"]
             ]
         }
         """ 
@@ -318,15 +333,18 @@ class VariablesDeclarationTest(unittest.TestCase):
         {
             "P1": [
                 ["O1", "O2"],
-                ["O3"]
+                ["O3"],
+                ["Place 1 comment"]
             ],
             "P2":[
                 ["O2", "O3"],
-                ["O1", "O2"]
+                ["O1", "O2"],
+                ["Place 2 comment"]
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"]
+                ["O2", "O3"],
+                ["Place 3 comment"]
             ],
             "initial": [ "P1", "P3" ]
             
@@ -357,15 +375,18 @@ class VariablesDeclarationTest(unittest.TestCase):
         {
             "P1": [
                 ["O1", "O2"],
-                ["O3"]
+                ["O3"],
+                ["Place 1 comment"]
             ],
             "P2":[
                 ["O2", "O3"],
-                ["O1", "O2"]
+                ["O1", "O2"],
+                ["Place 2 comment"]
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"]
+                ["O2", "O3"],
+                ["Place 3 comment"]
             ],
             "initial": [ "P1", "P3" ]
             
