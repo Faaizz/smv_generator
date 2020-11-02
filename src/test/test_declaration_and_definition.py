@@ -15,18 +15,9 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         input_str= """
         {
-            "I1": [
-                "boolean",
-                "false"
-            ],
-            "I2": [
-                ["1", "2", "3"],
-                "1"
-            ],
-            "STATUS": [
-                ["stopped", "running"],
-                "stopped"
-            ]
+            "I1": ["boolean"],
+            "I2": [["1", "2", "3"]],
+            "STATUS": [["stopped", "running"]]
             
         }
         """
@@ -201,26 +192,17 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         input_str= """
         {
-            "I1": [
-                "boolean",
-                "false"
-            ],
-            "I2": [
-                ["1", "2", "3"],
-                "1"
-            ],
-            "STATUS": [
-                ["stopped", "running"],
-                "stopped"
-            ]
+            "I1": ["boolean"],
+            "I2": [["1", "2", "3"]],
+            "STATUS": [["stopped", "running"]]
             
         }
         """
 
         # Expected NuSMV
-        expected= 'init(I1):= FALSE;\n' + \
-            'init(I2):= "1";\n' + \
-            'init(STATUS):= "stopped";\n' + \
+        expected= 'init(I1):= TRUE, FALSE};\n' + \
+            'init(I2):= {"1", "2", "3"};\n' + \
+            'init(STATUS):= {"stopped", "running"};\n' + \
             'next(I1):= case\n' + \
             '   stab: {TRUE, FALSE};\n' +\
             '   TRUE: I1;\n' + \
