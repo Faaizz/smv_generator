@@ -307,6 +307,81 @@ class VariablesDeclarationTest(unittest.TestCase):
             )
 
 
+    def test_stop_transitions_declaration(self):
+        # Test transitions from all places to the specified stop place
+
+        # Specified stop place
+        stop_place= "IDLE"
+
+        # Json input
+        input_str= """
+        {
+            "P1": [
+                ["O1", "O2"],
+                ["O3"]
+            ],
+            "P2":[
+                ["O2", "O3"],
+                ["O1", "O2"]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ],
+            "initial": [ "P1", "P3" ]
+            
+        }
+        """
+
+        expected= 'TP1{0}: boolean\n'.format(stop_place) + \
+            'TP2{0}: boolean\n'.format(stop_place) + \
+            'TP3{0}: boolean\n'.format(stop_place)
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, declare.stop_transitions_declaration(stop_place, input_dict))
+
+
+    def test_stop_transitions_definition(self):
+        # Test transitions from all places to the specified stop place
+
+        # Specified stop place
+        stop_place= "IDLE"
+        # Specfied stop input
+        stop_input= "STOP"
+
+        # Json input
+        input_str= """
+        {
+            "P1": [
+                ["O1", "O2"],
+                ["O3"]
+            ],
+            "P2":[
+                ["O2", "O3"],
+                ["O1", "O2"]
+            ],
+            "P3": [
+                ["O1"],
+                ["O2", "O3"]
+            ],
+            "initial": [ "P1", "P3" ]
+            
+        }
+        """
+
+        expected= 'TP1{0}:= (P1) & ( ({1}) ) & (!{0});\n'.format(stop_place, stop_input) + \
+            'TP2{0}:= (P2) & ( ({1}) ) & (!{0});\n'.format(stop_place, stop_input) + \
+            'TP3{0}:= (P3) & ( ({1}) ) & (!{0});\n'.format(stop_place, stop_input)
+
+        # Convert Json string to Python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, define.stop_transitions_definition(stop_place, stop_input, input_dict))
+
 
 
 
