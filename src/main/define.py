@@ -221,3 +221,26 @@ def output_definition(in_dict):
 
     return out_str
 
+def stop_transitions_definition(stop_place, stop_input, in_dict):
+    """Define output set/reset and equivalent condition in NuSMV
+
+    Parameters:
+    ----------
+    stop_place: str
+    stop_input: str
+    in_dict: dict
+
+    Returns:
+    -------
+    out_str: string
+    """
+    out_str= ""
+
+    # Loop through items
+    for key,value in in_dict.items(): 
+        # Skip the "initial" attribute of places
+        if not (key == "initial"):
+            temp= "T{0}{1}:= ({0}) & ( ({2}) ) & (!{1})".format(key, stop_place, stop_input) + ";\n"
+            out_str= out_str + temp
+
+    return out_str
