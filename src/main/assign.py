@@ -22,8 +22,7 @@ def input_assignment(in_dict):
         # Check if type is a string
         if isinstance(in_dict[key][0], str):
             # Initialization
-            init_str= init_str + "init({0}):= ".format(key) + \
-                in_dict[key][1].upper() + ";\n"
+            init_str= init_str + "init({0})".format(key) + ":= {TRUE, FALSE};\n"
 
             # Assignment
             assign_str= assign_str + \
@@ -34,11 +33,7 @@ def input_assignment(in_dict):
             
         # if type is not string
         else:
-            # Initialization
-            # Add quotes to initial value for non-booleans
-            init_str= init_str + "init({0}):= ".format(key) + \
-                '"{0}"'.format(in_dict[key][1]) + ";\n"
-
+            
             assign_type= "{"
             for idx, item in enumerate(value[0]):
                 # If not last item
@@ -49,6 +44,10 @@ def input_assignment(in_dict):
                     assign_type= assign_type + '"' + item + '"'
             
             assign_type= assign_type + "}"
+
+            # Initialization
+            # Add quotes to initial value for non-booleans
+            init_str= init_str + "init({0}):= {1};\n".format(key, assign_type)
 
             # Assignment
             assign_str= assign_str + \
