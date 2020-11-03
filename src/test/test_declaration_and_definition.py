@@ -200,7 +200,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= 'init(I1):= {TRUE, FALSE};\n' + \
+        expected= 'init(I1):= TRUE, FALSE};\n' + \
             'init(I2):= {"1", "2", "3"};\n' + \
             'init(STATUS):= {"stopped", "running"};\n' + \
             'next(I1):= case\n' + \
@@ -333,9 +333,9 @@ class VariablesDeclarationTest(unittest.TestCase):
         }
         """
 
-        expected= 'TP1{0}: boolean;\n'.format(stop_place) + \
-            'TP2{0}: boolean;\n'.format(stop_place) + \
-            'TP3{0}: boolean;\n'.format(stop_place)
+        expected= 'TP1{0}: boolean\n'.format(stop_place) + \
+            'TP2{0}: boolean\n'.format(stop_place) + \
+            'TP3{0}: boolean\n'.format(stop_place)
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
