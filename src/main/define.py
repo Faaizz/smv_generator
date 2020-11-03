@@ -124,7 +124,7 @@ def stab_definition(in_dict):
             out_str= out_str + key
 
     # Add closing brace and semicolon
-    out_str= out_str + ")"
+    out_str= out_str + ");\n"
 
     return out_str
 
@@ -239,40 +239,8 @@ def stop_transitions_definition(stop_place, stop_input, in_dict):
     # Loop through items
     for key,value in in_dict.items(): 
         # Skip the "initial" attribute of places
-        if not (key == "initial") and not (key == stop_place):
+        if not (key == "initial"):
             temp= "T{0}{1}:= ({0}) & ( ({2}) ) & (!{1})".format(key, stop_place, stop_input) + ";\n"
             out_str= out_str + temp
-
-    return out_str
-
-def stop_stab_definition(stop_place, in_dict):
-    """Define stability checking condition for stop transitions in NuSMV
-
-    Parameters:
-    ----------
-    stop_place: str
-    in_dict: dict
-
-    Returns:
-    -------
-    out_str: string
-    """
-    out_str="!("
-
-    keys= list(in_dict)
-    # Loop through items
-    for idx,key in enumerate(keys): 
-        # Skip the "initial" attribute of places
-        if not (key == "initial"):
-            # If not last item (minus 2 because we omit 'initial')
-            if idx < len(keys)-2:
-                temp= "T{0}{1} | ".format(key, stop_place)
-            else:
-                temp= "T{0}{1}".format(key, stop_place)
-            
-            out_str= out_str + temp
-
-    # Add closing brace and semicolon
-    out_str= out_str + ")"
 
     return out_str

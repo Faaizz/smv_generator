@@ -62,3 +62,31 @@ def place_declaration(in_dict):
             out_str= out_str + temp
 
     return out_str
+
+
+def stop_transitions_declaration(stop_place, in_dict):
+    """Declare stop transitions in NuSMV
+
+    Parameters:
+    ----------
+    stop_place: str
+        name of stop place
+    in_dict: dict
+
+    Returns:
+    -------
+    out_str: string
+    """
+    
+    out_str= ""
+
+    # Loop through items
+    for key,value in in_dict.items(): 
+        # Skip the "initial" attribute of places
+        if not (key == "initial"):
+            temp= "T{0}{1}: ".format(key, stop_place) + "boolean;\n"
+            out_str= out_str + temp
+
+    return out_str
+
+
