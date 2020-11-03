@@ -23,6 +23,24 @@ cl_parser.add_argument(
     help='Path to source JSON file'
     )
 
+# Stop State
+cl_parser.add_argument(
+    '--stop', dest='stop', action="store_true",
+    help='Generate transitions from every other marking to the idle state.'
+    )
+
+# Stop Place
+cl_parser.add_argument(
+    '--stop_place', dest='stop_place', action="store", default= "IDLE",
+    help='Idle place name'
+    )
+
+# Stop Input
+cl_parser.add_argument(
+    '--stop_input', dest='stop_input', action="store", default= "STOP",
+    help='Stop input name'
+    )
+
 # Collect arguments
 run_options= cl_parser.parse_args()
 
@@ -63,7 +81,6 @@ declaration= declaration + """
 declare.place_declaration(input_dict["places"])
 
 
-
 #====================================================================
 # DEFINITION
 
@@ -82,15 +99,24 @@ definition= definition + """
 -- TRANSITIONS
 """ + define.transition_definition(input_dict["transitions"])
 
+# Stop Transitions Definition
+if (run_options.stop == True):
+    definition= definition + """--- STOP PLACE\n""" + \
+    define.stop_transitions_definition(run_options.stop_place, run_options.stop_input, input_dict["places"])
+    # Stop stability
+    stop_stable= " & " + define.stop_stab_definition(run_options.stop_place, input_dict["places"]) + ";\n"
+else:
+    stop_stable= ";\n"
+
+
 # Stability Definition
 definition= definition + """ 
 -- STABLE
-""" + define.stab_definition(input_dict["transitions"])
+""" + define.stab_definition(input_dict["transitions"]) + stop_stable
 # Output Definition
 definition= definition + """ 
 -- OUTPUTS
 """ + define.output_definition(input_dict["places"])
-
 
 #====================================================================
 # ASSIGNMENT
