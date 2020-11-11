@@ -16,11 +16,23 @@ class VariablesDeclarationTest(unittest.TestCase):
         input_str= r"""
         {
         "I1": "boolean",
-        "I2": "{\"1\", \"2\", \"3\"}",
-        "I3": "0..10",
-        "STATUS": "{\"stopped\", \"running\"}"
+        "I2": [ 
+                "{\"1\", \"2\", \"3\"}",
+                "1",
+                "{\"1\", \"2\", \"3\"}"
+            ],
+        "I3": [
+                "0..10",
+                "{0, 4, 7}",
+                "{0, 5, 7}"
+            ],
+        "STATUS": [
+                "{\"stopped\", \"running\"}",
+                "stopped",
+                "{\"stopped\", \"running\"}"
+            ]
         
-    }
+        }
         """
 
         # Expected MuSMV
