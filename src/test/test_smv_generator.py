@@ -204,19 +204,33 @@ class VariablesDeclarationTest(unittest.TestCase):
     def test_input_assignment(self):
 
         # Json input
-        input_str= """
+        input_str= r"""
         {
-            "I1": ["boolean"],
-            "I2": [["1", "2", "3"]],
-            "STATUS": [["stopped", "running"]]
-            
+            "I1": "boolean",
+            "I2": [ 
+                    "{\"1\", \"2\", \"3\"}",
+                    "{\"1\", \"2\"}",
+                    "{\"1\", \"2\", \"3\"}"
+                ],
+            "I3": [
+                    "0..10",
+                    5,
+                    "{0, 5, 7}"
+                ],
+            "STATUS": [
+                    "{\"stopped\", \"running\"}",
+                    "stopped",
+                    "{\"stopped\", \"running\"}"
+                ]
+
         }
         """
 
         # Expected NuSMV
         expected= 'init(I1):= {TRUE, FALSE};\n' + \
-            'init(I2):= {"1", "2", "3"};\n' + \
-            'init(STATUS):= {"stopped", "running"};\n' + \
+            'init(I2):= {"1", "2"};\n' + \
+            'init(I3):= 5;\n' + \
+            'init(STATUS):= "stopped";\n' + \
             'next(I1):= case\n' + \
             '   stab: {TRUE, FALSE};\n' +\
             '   TRUE: I1;\n' + \
@@ -224,6 +238,10 @@ class VariablesDeclarationTest(unittest.TestCase):
             'next(I2):= case\n' + \
             '   stab: {"1", "2", "3"};\n' +\
             '   TRUE: I2;\n' + \
+            'esac;\n'+ \
+            'next(I3):= case\n' + \
+            '   stab: {0, 5, 7};\n' +\
+            '   TRUE: I3;\n' + \
             'esac;\n'+ \
             'next(STATUS):= case\n' + \
             '   stab: {"stopped", "running"};\n' +\
