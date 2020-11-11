@@ -93,27 +93,27 @@ class VariablesDeclarationTest(unittest.TestCase):
             "T1":[
                 ["P1", "P2"],
                 [
-                    [ ["I1", "I2"], ["I4"] ],
+                    [ "I1 & I2 & !I4" ],
                     [ ["I3"], ["I4"] ]
                 ],
                 ["P3"],
-                ["T1 comment"]
+                "T1 comment"
             ],
             "T2":[
                 ["P3"],
                 [
                     [ ["I4"], ["I1", "I2"] ],
-                    [ ["I4"], ["I3"] ]
+                    [ "I4 & !I3" ]
                 ],
                 ["P1", "P2"],
-                ["T2 comment"]
+                "T2 comment"
             ]
         }
         """
 
         # Expected NuSMV
         expected= "T1:= (P1 & P2) & ( (I1 & I2 & !I4) | (I3 & !I4) ) & (!P3);\n" + \
-        "T2:= (P3) & ( (I4 & !I1 & !I2) | (I4 & !I3) ) & (!P1 & !P2);\n"  
+        "T2:= (P3) & ( (I4 & !I1 & !I2) | (I4 & !I3) ) & (!P1 & !P2);\n"    
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -131,19 +131,19 @@ class VariablesDeclarationTest(unittest.TestCase):
                 ["P1", "P2"],
                 [
                     [ ["I1", "I2"], ["I4"] ],
-                    [ ["I3"], ["I4"] ]
+                    [ "I3 & !I4" ]
                 ],
                 ["P3"],
-                ["T1 comment"]
+                "T1 comment"
             ],
             "T2":[
                 ["P3"],
                 [
-                    [ ["I4"], ["I1", "I2"] ],
+                    [ "I4 & ! (I1 | I2)" ],
                     [ ["I4"], ["I3"] ]
                 ],
                 ["P1", "P2"],
-                ["T2 comment"]
+                "T2 comment"
             ]
         }
         """ 
