@@ -19,8 +19,8 @@ def input_assignment(in_dict):
 
     # loop through elements
     for key,value in in_dict.items():
-        # Check if type is a string
-        if isinstance(in_dict[key][0], str):
+        # Check if type is a boolean
+        if isinstance(in_dict[key], str):
             # Initialization
             init_str= init_str + "init({0})".format(key) + ":= {TRUE, FALSE};\n"
 
@@ -31,31 +31,24 @@ def input_assignment(in_dict):
                 '   TRUE: {0};\n'.format(key) + \
                 'esac;\n'
             
-        # if type is not string
+        # if type is not a boolean
         else:
-            
-            assign_type= "{"
-            for idx, item in enumerate(value[0]):
-                # If not last item
-                if idx < len(value[0])-1:
-                    assign_type= assign_type + '"' + item + '"' + ", "
-                # If last item
-                else:
-                    assign_type= assign_type + '"' + item + '"'
-            
-            assign_type= assign_type + "}"
 
             # Initialization
-            # Add quotes to initial value for non-booleans
-            init_str= init_str + "init({0}):= {1};\n".format(key, assign_type)
+            init_val= in_dict[key][1]
+            # Check if initial value is a string and is not n enum type
+            if (isinstance(init_val, str) and not ("{" in init_val)):
+                init_val= '"' + init_val + '"'
+
+            init_str= init_str + "init({0})".format(key) + ":= {0};\n".format(init_val)
 
             # Assignment
             assign_str= assign_str + \
                 'next({0}):= case\n'.format(key) + \
-                '   stab: {0};\n'.format(assign_type) +\
+                '   stab: {0};\n'.format(in_dict[key][2]) +\
                 '   TRUE: {0};\n'.format(key) + \
                 'esac;\n'
-
+            
     # return
     out_str= init_str + assign_str
     
