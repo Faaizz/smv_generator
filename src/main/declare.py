@@ -18,21 +18,13 @@ def input_declaration(in_dict):
     for key in iter(in_dict):
         value= in_dict[key]
         # Check if type is not a list
-        if not isinstance(value[0], list):
+        if not isinstance(value, list):
+            # Type is boolean
+            input_type= value
+        
+        else: 
+            # Type is specified as array of raw string values
             input_type= value[0]
-        # if type is a list
-        else:
-            input_type= "{"
-            for idx, item in enumerate(value[0]):
-                # If not last item
-                if idx < len(value[0])-1:
-                    input_type= input_type + '"' + item + '"' + ", "
-                # If last item
-                else:
-                    input_type= input_type + '"' + item + '"'
-            
-            input_type= input_type + "}"
-
 
         temp= key + ": " + input_type + ";\n"
         out_str= out_str + temp
