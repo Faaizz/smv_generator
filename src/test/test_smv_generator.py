@@ -227,6 +227,11 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         places_str= """
         {
+            "IDLE": [
+                [],
+                [],
+                ["Initial place"]
+            ],
             "P1": [
                 ["O1", "O2"],
                 ["O3"],
@@ -242,13 +247,20 @@ class VariablesDeclarationTest(unittest.TestCase):
                 ["O2", "O3"],
                 ["Place 3 comment"]
             ],
-            "initial": [ "P1", "P3" ]
+            "initial": [ "IDLE" ]
             
         }
         """
 
         transitions_str= """
         {
+            "T0": [
+                ["IDLE"],
+                [
+                    [["START"], []]
+                ],
+                ["P1"]
+            ],
             "T1":[
                 ["P1", "P2"],
                 [
@@ -275,10 +287,16 @@ class VariablesDeclarationTest(unittest.TestCase):
         """ 
 
         # Expected NuSMV
-        expected= 'init(P1):= TRUE;\n' + \
+        expected= 'init(IDLE):= TRUE;\n' + \
+            'init(P1):= FALSE;\n' + \
             'init(P2):= FALSE;\n' + \
-            'init(P3):= TRUE;\n' + \
+            'init(P3):= FALSE;\n' + \
+            'next(IDLE):= case\n' + \
+            '   T0: FALSE;\n' +\
+            '   TRUE: IDLE;\n' + \
+            'esac;\n' + \
             'next(P1):= case\n' + \
+            '   T0: TRUE;\n' +\
             '   T1: FALSE;\n' +\
             '   T2: TRUE;\n' +\
             '   TRUE: P1;\n' + \
