@@ -36,31 +36,38 @@ def transition_definition(in_dict):
         # Required inputs condition
         req_str= "( "
         for idx_out,item in enumerate(req_inputs):
-            high_ins= item[0]
-            low_ins= item[1]
+
             # Temp string opening brace
             temp_str= "("
-            # temp inputs
-            for idx_high,high_in in enumerate(high_ins):
-                # Not last item
-                if idx_high < len(high_ins)-1:
-                    temp_str= temp_str + high_in + " & "
-                # If last item
-                else:
-                    # If there are no low outputs required
-                    if len(low_ins) < 1:
-                        temp_str= temp_str + high_in
-                    else:
-                        temp_str= temp_str + high_in + " & "
+
+            # Check if condition is specified as a raw string
+            if isinstance(item[0], str):
+                temp_str= temp_str + item[0]
             
-            # Low inputs
-            for idx_low,low_in in enumerate(low_ins):
-                # Not last item
-                if idx_low < len(low_ins)-1:
-                    temp_str= temp_str + "!" + low_in + " & "
-                # If last item
-                else:
-                    temp_str= temp_str + "!" + low_in
+            else:
+                high_ins= item[0]
+                low_ins= item[1]
+                # temp inputs
+                for idx_high,high_in in enumerate(high_ins):
+                    # Not last item
+                    if idx_high < len(high_ins)-1:
+                        temp_str= temp_str + high_in + " & "
+                    # If last item
+                    else:
+                        # If there are no low outputs required
+                        if len(low_ins) < 1:
+                            temp_str= temp_str + high_in
+                        else:
+                            temp_str= temp_str + high_in + " & "
+                
+                # Low inputs
+                for idx_low,low_in in enumerate(low_ins):
+                    # Not last item
+                    if idx_low < len(low_ins)-1:
+                        temp_str= temp_str + "!" + low_in + " & "
+                    # If last item
+                    else:
+                        temp_str= temp_str + "!" + low_in
 
             # Temp string closing brace
             temp_str= temp_str + ")"   
