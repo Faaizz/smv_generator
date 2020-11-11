@@ -56,17 +56,16 @@ class VariablesDeclarationTest(unittest.TestCase):
             "P1": [
                 ["O1", "O2"],
                 ["O3"],
-                ["Place 1 comment"]
+                "Place 1 comment"
             ],
             "P2":[
                 ["O2", "O3"],
                 ["O1", "O2"],
-                ["Place 2 comment"]
+                "Place 2 comment"
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"],
-                [""]
+                ["O2", "O3"]
             ],
             "initial": [ "P1", "P3" ]
             
@@ -166,17 +165,16 @@ class VariablesDeclarationTest(unittest.TestCase):
             "P1": [
                 ["O1", "O2"],
                 ["O3"],
-                ["Place 1 comment"]
+                "Place 1 comment"
             ],
             "P2":[
                 ["O2", "O3"],
                 ["O1", "O2"],
-                ["Place 2 comment"]
+                "Place 2 comment"
             ],
             "P3": [
                 ["O1"],
-                ["O2", "O3"],
-                [""]
+                ["O2", "O3"]
             ],
             "initial": [ "P1", "P3" ]
             
@@ -246,22 +244,22 @@ class VariablesDeclarationTest(unittest.TestCase):
             "IDLE": [
                 [],
                 [],
-                ["Initial place"]
+                "Initial place"
             ],
             "P1": [
                 ["O1", "O2"],
                 ["O3"],
-                ["Place 1 comment"]
+                "Place 1 comment"
             ],
             "P2":[
                 ["O2", "O3"],
                 ["O1", "O2"],
-                ["Place 2 comment"]
+                "Place 2 comment"
             ],
             "P3": [
                 ["O1"],
                 ["O2", "O3"],
-                ["Place 3 comment"]
+                "Place 3 comment"
             ],
             "initial": [ "IDLE" ]
             
