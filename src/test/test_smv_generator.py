@@ -13,17 +13,21 @@ class VariablesDeclarationTest(unittest.TestCase):
     def test_input_declaration(self):
         
         # Json input
-        input_str= """
+        input_str= r"""
         {
-            "I1": ["boolean"],
-            "I2": [["1", "2", "3"]],
-            "STATUS": [["stopped", "running"]]
-            
-        }
+        "I1": "boolean",
+        "I2": "{\"1\", \"2\", \"3\"}",
+        "I3": "0..10",
+        "STATUS": "{\"stopped\", \"running\"}"
+        
+    }
         """
 
         # Expected MuSMV
-        expected= 'I1: boolean;\n' + 'I2: {"1", "2", "3"};\n' + 'STATUS: {"stopped", "running"};\n'
+        expected= 'I1: boolean;\n' + \
+            'I2: {"1", "2", "3"};\n' + \
+            'I3: 0..10;\n' + \
+            'STATUS: {"stopped", "running"};\n'
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
