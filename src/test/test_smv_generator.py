@@ -353,6 +353,38 @@ class VariablesDeclarationTest(unittest.TestCase):
             expected, assign.place_assignment(places_dict, transitions_dict)
             )
 
+    
+    #================================================================
+    ## SPECIFICATIONS
+
+    def test_manual_specs(self):
+
+        # Json input
+        input_str= """
+        {
+            "manual": [
+                "AG(stab -> EF(P5))",
+                "AG( ((CS_AL1_W < 4) | (CS_AL1_W > 8)) -> AF(!(P5 | P6)) )"
+            ]            
+        }
+        """
+
+        # Expected NuSMV
+        expected= "SPEC\n" + \
+            "AG(stab -> EF(P5));\n" + \
+            "AG( ((CS_AL1_W < 4) | (CS_AL1_W > 8)) -> AF(!(P5 | P6)) );\n"
+
+        
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, spec.manual(input_dict))
+
+        
+
+
+
 
 
 
