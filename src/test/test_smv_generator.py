@@ -4,6 +4,7 @@ from collections import OrderedDict
 import main.declare as declare
 import main.define as define
 import main.assign as assign
+import main.spec as spec
 
 class VariablesDeclarationTest(unittest.TestCase):
 
