@@ -8,6 +8,7 @@ from collections import OrderedDict
 import main.declare as declare
 import main.define as define
 import main.assign as assign
+import main.spec as spec
 
 #==============================================================================
 # COMMAND-LINE HELP, OPTIONS, ARGUMENTS
@@ -117,8 +118,25 @@ assignment= assignment + """
 
 
 #====================================================================
+# SPECIFICATIONS
+
+specification= """
+
+--=====================================================================
+--SPECIFICATIONS
+--=====================================================================
+
+"""
+# Manual Specifications
+
+try:
+    specification= specification + spec.manual(input_dict["specifications"])
+except KeyError as e:
+    pass
+
+#====================================================================
 # OUTPUT
 
 # Write to output file
 with open("output.smv", "w") as f:
-    f.write(declaration + definition + assignment)
+    f.write(declaration + definition + assignment + specification)
