@@ -372,6 +372,7 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Expected NuSMV
         expected= "SPEC\n" + \
             "AG(stab -> EF(P5));\n" + \
+            "SPEC\n" + \
             "AG( ((CS_AL1_W < 4) | (CS_AL1_W > 8)) -> AF(!(P5 | P6)) );\n"
 
         
