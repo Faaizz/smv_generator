@@ -24,8 +24,11 @@ It should be noted that terms like *inputs*, *places*, *transitions*, and *outpu
 ### 1- Places
 The root json object must have a *places* attribute, which holds an array. 
 This *places* array in turn contains an attribute to represent each place in the SIPN. 
-Subsequently, each SIPN place attribute is an array with a minimum of 2 elements. 
-The first being an array of outputs that should be set at the place, and the second an array of outputs that should be reset at such place. 
+Subsequently, each SIPN place attribute is an array with a minimum of 1 element, and an optional other 2.   
+1. Element 0: An array with 2 elements. The first being an array of boolean outputs that should be set at the place, and the second an array of boolean outputs that should be reset at such place. 
+1. Element 1: An array of manually specified output assignments for non-boolean outputs. 
+1. Element 2: A comment string.  
+
 In addition, there's an *initial* attribute in the *places* object which holds an array of places that should be marked initially. 
 Each place array can contain an optional 3rd element which holds comments about the place, this element is not used in processing.   
 
@@ -36,21 +39,27 @@ Illustration:
 {
     "places": {
         "PLACE1": [
-            ["OUTPUT1", "OUTPUT2"],
-            ["OUTPUT3"],
+            [
+                ["AL1_GRAB"],
+                ["RP_AL1_CLAMP"],
+            ],
+            ["AL1_X_SET=80"],
             "Textual description of the significance of this place"
         ],
         "PLACE2":[
-            ["OUTPUT3"],
-            ["OUTPUT1", "OUTPUT2"]
+            [
+                ["RP_AL1_CLAMP"],
+                ["AL1_GRAB"]
+            ],
+            "Comment text."            
         ],
         "initial": [ "P1", "P3" ]
     }
 }
 ```
 
-In the above example, *PLACE1* when marked, sets *OUTPUT1* and *OUTPUT2* and resets *OUTPUT3*. 
-While when *PLACE2* is marked, *OUTPUT3* is set and the other 2 outputs reset.  
+In the above example, *PLACE1* when marked, sets *AL1_GRAB* as TRUE, *RP_AL1_CLAMP* as FALSE, and *AL1_X_SET* as 80. 
+While when *PLACE2* is marked, *RP_AL1_CLAMP* is set TRUE and *AL1_GRAB* FALSE.  
 
 
 ### 2- Inputs
