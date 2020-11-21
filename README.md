@@ -1,21 +1,30 @@
 ![unit_test_workflow](https://github.com/Faaizz/smv_generator/workflows/Unit%20Tests/badge.svg)
 
 # SMV and ST Generator
-Python program to generate SMV language for model checking and IEC 61131 Structured Text PLC code from JSON representation of Signal Interpreted Petri Nets (SIPN). 
+Python program to generate SMV language for model checking and IEC 61131 Structured Text (ST) PLC code from JSON representation of Signal Interpreted Petri Nets (SIPN). 
 
 ## How It Works
 The program takes a json specification of the SIPN as input, and produces a symbolic model checker in the [NuSMV](http://nusmv.fbk.eu/) language. 
 For the program to function properly, the input json must follow some laid out syntax which is outlined below.  
 
-The program translates the json input into NuSMV code that performs the following activities:
+The program translates the json input into NuSMV code by performing the following activities:
 - Declare all places as variables of type "boolean"
 - Declare all inputs as variables of the specified types
 - Define transition firing conditions based on specified pre-places, inputs combinations (which may be specified as a raw string), and post-places for each transition
 - Define variable *stab* to check stability of markings
-- Define the *set* and *reset* conditions for each output based on information obtained from the places
+- Define the *set* and *reset* conditions for each boolean output based on information obtained from the places
 - Define the present value of each output at every stable marking
 - Assign initial values to inputs and construct how they obtain next values accordingly (automatically for boolean inputs, but relies on provided inofrmation for inputs of other types)
 - Assign initial values to places accordingly and construct how they obtain next values based on the firing of transitions
+
+
+The program translates the json input into ST code by performing the following activities:
+- Declare all places as variables of type "BOOL" and assign initial values based on the specified initial markings
+- Declare all inputs and outputs as variables of the specified types and PLC addresses
+- Define transition firing conditions based on specified pre-places, inputs combinations (which may be specified as a raw string), and post-places for each transition
+- Fire transitions in a loop in order to set outputs only at stable markings
+- Set the value of each output at every stable marking
+
 
 ## JSON Syntax
 It should be noted that terms like *inputs*, *places*, *transitions*, and *outputs* in this section are used to represent the names of such entities. 
@@ -24,10 +33,10 @@ It should be noted that terms like *inputs*, *places*, *transitions*, and *outpu
 ### 1- Places
 The root json object must have a *places* attribute, which holds an array. 
 This *places* array in turn contains an attribute to represent each place in the SIPN. 
-Subsequently, each SIPN place attribute is an array with a minimum of 1 element, and an optional other 2.   
-1. Element 0: An array with 2 elements. The first being an array of boolean outputs that should be set at the place, and the second an array of boolean outputs that should be reset at such place. 
-1. Element 1: An array of manually specified output assignments for non-boolean outputs. 
-1. Element 2: A comment string.  
+Subsequently, each SIPN place attribute is an array with the following elements:   
+1. Element 0: An array with 2 elements. The first being an array of boolean outputs that should be set at the place, and the second an array of boolean outputs that should be reset at such place. *Required*   
+1. Element 1: An array of manually specified output assignments for non-boolean outputs. *Optional*  
+1. Element 2: A comment string. *Optional*  
 
 In addition, there's an *initial* attribute in the *places* object which holds an array of places that should be marked initially. 
 Each place array can contain an optional 3rd element which holds comments about the place, this element is not used in processing.   
@@ -64,12 +73,7 @@ While when *PLACE2* is marked, *RP_AL1_CLAMP* is set TRUE and *AL1_GRAB* FALSE.
 
 ### 2- Inputs
 The inputs into the SIPN are registered in the *inputs* attribute of the root json object. 
-Each input is specified as a named attribute of the *inputs* object. 
-For boolean inputs, a string *"boolean"* is sufficient. 
-For inputs of other types (such as enumeration and integer), an array is required. 
-The first element of the array should be a raw text representation of the input type, 
-the second an initial value for the input, 
-and the third a textual specification of the possible values the input can attain in future.  
+
 
 Illustration:
 ```json
@@ -77,25 +81,36 @@ Illustration:
 {
     "inputs": {
 
-        "I1": "boolean",
-
-        "I2": [ 
-                "{\"1\", \"2\", \"3\"}",
-                "1",
-                "{\"1\", \"2\", \"3\"}"
+        "S_AL1_ST1": ["boolean", "%IX100.0"],
+        "S_AL1_ST2": ["boolean", "%IX100.1"],
+        "S_AL1_ST3": ["boolean", "%IX100.2"],
+        "RP_AL1_ST_CLAMPED": ["boolean", "%IX100.3"],
+        "AL1_ST_DETECTED": ["boolean", "%IX100.4"],
+        "RESET": ["boolean", "%IX100.5"],
+        "AL1_ST_X_POS": [
+            [
+                "{0, 400, 860}",
+                0,
+                "{0, 400, 860}"
             ],
-
-        "I3": [
-                "0..10",
-                "{0, 4, 7}",
-                "{0, 5, 7}"
+            "%IW100"
+        ],
+        "AL1_ST_Y_POS": [
+            [
+                "{0, 300, 560}",
+                0,
+                "{0, 300, 560}"
             ],
-
-        "STATUS": [
-                "{\"stopped\", \"running\"}",
-                "stopped",
-                "{\"stopped\", \"running\"}"
-            ]
+            "%IW101"
+        ],
+        "AL1_ST_Z_POS": [
+            [
+                "{0, 200, 410, 750}",
+                0,
+                "{0, 200, 410, 750}"
+            ],
+            "%IW102"
+        ]
         
     }
 
@@ -114,44 +129,29 @@ The transition conditions may be specified as raw text by specifying a string in
 - *Element 2*: An array of places that must be left unmarked for the transition to fire.  
 
 For example, if transition *T1* has pre-places *P1* and *P2*, requires inputs *I1* and *I2* to be set and *I4* not set or input *I3* to be set and *I4* not set, and has post-place *P3*, we have in NuSMV:
-```smv
-VAR
--- Inputs
-I1: boolean;
-I2: boolean;
-I3: boolean;
 
--- Places
-P1: boolean;
-P2: boolean;
-P3: boolean;
 
-DEFINE
--- T1 input requirements
-T1_inputs:= (I1 & I2 & !I4) | (I3 & !I4);
-
--- T1 pre-places marked
-T1_pre:= P1 & P2;
-
--- T1 post-place free
-T1_post:= !P3;
-
--- T1 fires
-T1_fires:= T1_pre & T1_inputs & T1_post;
-
-```  
-
-Then the entry for transition *T1* in the *transitions* object should look like:
+Then the entry for transitions in the *transitions* object should look like:
 ```json
 {
     "transitions": {
-        "T1":[
-            ["P1", "P2"],
+        "TS3": [
+            ["PS2"],
             [
-                [ ["I1", "I2"], ["I4"] ],
-                [ "I3 & I4" ]
+                [
+                    ["RP_AL1_ST_CLAMPED"], []
+                ]
             ],
-            ["P3"]
+            ["PS3"]
+        ],
+        "TS4": [
+            ["PS3"],
+            [
+                [
+                    "(AL1_ST_Y_POS>540) & (AL1_ST_Y_POS<580)"
+                ]
+            ],
+            ["PS4"]
         ]
     }
 }
