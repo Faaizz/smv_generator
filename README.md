@@ -1,7 +1,7 @@
 ![unit_test_workflow](https://github.com/Faaizz/smv_generator/workflows/Unit%20Tests/badge.svg)
 
-# SMV Generator
-Python program to generate SMV language for Signal Interpreted Petri Net (SIPN) model checking from JSON representation of such model. 
+# SMV and ST Generator
+Python program to generate SMV language for model checking and IEC 61131 Structured Text PLC code from JSON representation of Signal Interpreted Petri Nets (SIPN). 
 
 ## How It Works
 The program takes a json specification of the SIPN as input, and produces a symbolic model checker in the [NuSMV](http://nusmv.fbk.eu/) language. 
