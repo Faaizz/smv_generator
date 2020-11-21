@@ -20,7 +20,7 @@ def input_assignment(in_dict):
     # loop through elements
     for key,value in in_dict.items():
         # Check if type is a boolean
-        if isinstance(in_dict[key], str):
+        if isinstance(in_dict[key][0], str):
             # Initialization
             init_str= init_str + "init({0})".format(key) + ":= {TRUE, FALSE};\n"
 
@@ -35,7 +35,7 @@ def input_assignment(in_dict):
         else:
 
             # Initialization
-            init_val= in_dict[key][1]
+            init_val= in_dict[key][0][1]
             # Check if initial value is a string and is not n enum type
             if (isinstance(init_val, str) and not ("{" in init_val)):
                 init_val= '"' + init_val + '"'
@@ -45,7 +45,7 @@ def input_assignment(in_dict):
             # Assignment
             assign_str= assign_str + \
                 'next({0}):= case\n'.format(key) + \
-                '   stab: {0};\n'.format(in_dict[key][2]) +\
+                '   stab: {0};\n'.format(in_dict[key][0][2]) +\
                 '   TRUE: {0};\n'.format(key) + \
                 'esac;\n'
             

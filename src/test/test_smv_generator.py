@@ -1,10 +1,10 @@
 import unittest, json
 from collections import OrderedDict
 
-import main.declare as declare
-import main.define as define
-import main.assign as assign
-import main.spec as spec
+import main.smv.declare as declare
+import main.smv.define as define
+import main.smv.assign as assign
+import main.smv.spec as spec
 
 class VariablesDeclarationTest(unittest.TestCase):
 
@@ -16,31 +16,43 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         input_str= r"""
         {
-        "I1": "boolean",
-        "I2": [ 
-                "{\"1\", \"2\", \"3\"}",
-                "1",
-                "{\"1\", \"2\", \"3\"}"
+            "S_AL1_ST1": ["boolean", "%IX100.0"],
+            "S_AL1_ST2": ["boolean", "%IX100.1"],
+            "STATUS": [
+                [
+                    "{\"stopped\", \"running\"}",
+                    "stopped",
+                    "{\"stopped\", \"running\"}"
+                ],
+                "%IX100.2"
             ],
-        "I3": [
-                "0..10",
-                "{0, 4, 7}",
-                "{0, 5, 7}"
+            "AL1_ST_X_POS": [
+                [
+                    "{0, 400, 860}",
+                    0,
+                    "{0, 400, 860}"
+                ],
+                "%IW100",
+                "INT"
             ],
-        "STATUS": [
-                "{\"stopped\", \"running\"}",
-                "stopped",
-                "{\"stopped\", \"running\"}"
+            "AL1_ST_Y_POS": [
+                [
+                    "{0, 300, 560}",
+                    0,
+                    "{0, 300, 560}"
+                ],
+                "%IW101",
+                "INT"
             ]
-        
         }
         """
 
         # Expected MuSMV
-        expected= 'I1: boolean;\n' + \
-            'I2: {"1", "2", "3"};\n' + \
-            'I3: 0..10;\n' + \
-            'STATUS: {"stopped", "running"};\n'
+        expected= 'S_AL1_ST1: boolean;\n' + \
+            'S_AL1_ST2: boolean;\n' + \
+            'STATUS: {"stopped", "running"};\n' + \
+            'AL1_ST_X_POS: {0, 400, 860};\n' + \
+            'AL1_ST_Y_POS: {0, 300, 560};\n'
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -54,27 +66,32 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         input_str= """
         {
-            "P1": [
-                ["O1", "O2"],
-                ["O3"],
-                "Place 1 comment"
+            "PS2": [
+                [
+                    ["RP_AL1_ST_CLAMP"], ["AL1_ST_GRAB"]
+                ],
+                "Product gets withing graber range"
             ],
-            "P2":[
-                ["O2", "O3"],
-                ["O1", "O2"],
-                "Place 2 comment"
+           "PS4": [
+                [
+                    ["RP_AL1_ST_CLAMP"], ["AL1_ST_GRAB"]
+                ],
+                ["AL1_ST_Z_SET:=750"],
+                "Move grabber down to pick up product"
             ],
-            "P3": [
-                ["O1"],
-                ["O2", "O3"]
+            "PSE0": [
+                [
+                    [], ["AL1_EMIT", "RC_AL1_ST"]
+                ],
+                "New box arrived, stop conveyor"
             ],
-            "initial": [ "P1", "P3" ]
+            "initial": ["PS2", "PSE0"]
             
         }
         """
 
         # Expected NuSMV
-        expected= "P1: boolean;\n" + "P2: boolean;\n" + "P3: boolean;\n"
+        expected= "PS2: boolean;\n" + "PS4: boolean;\n" + "PSE0: boolean;\n"
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -103,7 +120,7 @@ class VariablesDeclarationTest(unittest.TestCase):
             "T2":[
                 ["P3"],
                 [
-                    [ ["I4"], ["I1", "I2"] ],
+                    [ [], ["I1", "I2"] ],
                     [ "I4 & !I3" ]
                 ],
                 ["P1", "P2"],
@@ -114,7 +131,7 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Expected NuSMV
         expected= "T1:= (P1 & P2) & ( (I1 & I2 & !I4) | (I3 & !I4) ) & (!P3);\n" + \
-        "T2:= (P3) & ( (I4 & !I1 & !I2) | (I4 & !I3) ) & (!P1 & !P2);\n"    
+        "T2:= (P3) & ( (!I1 & !I2) | (I4 & !I3) ) & (!P1 & !P2);\n"    
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -163,35 +180,51 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         input_str= """
         {
-            "P1": [
-                ["O1", "O2"],
-                ["O3"],
-                "Place 1 comment"
+            "PS2": [
+                [
+                    ["RP_AL1_ST_CLAMP"], ["AL1_ST_GRAB"]
+                ],
+                "Product gets withing graber range"
             ],
-            "P2":[
-                ["O2", "O3"],
-                ["O1", "O2"],
-                "Place 2 comment"
+           "PS4": [
+                [
+                    ["RP_AL1_ST_CLAMP"], ["AL1_ST_GRAB"]
+                ],
+                ["AL1_ST_Z_SET:=750"],
+                "Move grabber down to pick up product"
             ],
-            "P3": [
-                ["O1"],
-                ["O2", "O3"]
+            "PSE0": [
+                [
+                    ["AL1_ST_GRAB"], ["AL1_EMIT", "RC_AL1_ST"]
+                ],
+                "New box arrived, stop conveyor"
             ],
-            "initial": [ "P1", "P3" ]
+            "initial": ["PS2", "PSE0"]
             
         }
         """
 
         # Expected output
         expected= "-- SET\n" + \
-            "O1_set:= P1 | P3;\n" + \
-            "O2_set:= P1 | P2;\n" + "O3_set:= P2;\n" + \
+            "AL1_EMIT_set:= FALSE;\n" + \
+            "AL1_ST_GRAB_set:= PSE0;\n" + \
+            "RC_AL1_ST_set:= FALSE;\n" + \
+            "RP_AL1_ST_CLAMP_set:= PS2 | PS4;\n" + \
             "-- RESET\n" + \
-            "O1_reset:= P2;\n" + \
-            "O2_reset:= P2 | P3;\n" + "O3_reset:= P1 | P3;\n" + \
+            "AL1_EMIT_reset:= PSE0;\n" + \
+            "AL1_ST_GRAB_reset:= PS2 | PS4;\n" + \
+            "RC_AL1_ST_reset:= PSE0;\n" + \
+            "RP_AL1_ST_CLAMP_reset:= FALSE;\n" + \
             "-- OUTPUT\n" + \
-            "O1:= O1_set & !O1_reset;\n" + \
-            "O2:= O2_set & !O2_reset;\n" + "O3:= O3_set & !O3_reset;\n"
+            "AL1_EMIT:= AL1_EMIT_set & !AL1_EMIT_reset;\n" + \
+            "AL1_ST_GRAB:= AL1_ST_GRAB_set & !AL1_ST_GRAB_reset;\n" + \
+            "RC_AL1_ST:= RC_AL1_ST_set & !RC_AL1_ST_reset;\n" + \
+            "RP_AL1_ST_CLAMP:= RP_AL1_ST_CLAMP_set & !RP_AL1_ST_CLAMP_reset;\n" + \
+            "-- Non-Boolean Outputs\n" + \
+            "AL1_ST_Z_SET:= case\n" + \
+            "   PS4: 750;\n" + \
+            "   TRUE: 0;\n" + \
+            "esac;\n"
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -207,23 +240,31 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Json input
         input_str= r"""
         {
-            "I1": "boolean",
-            "I2": [ 
-                    "{\"1\", \"2\", \"3\"}",
-                    "{\"1\", \"2\"}",
-                    "{\"1\", \"2\", \"3\"}"
+            "I1": ["boolean", "%IX100.0"],
+            "I2": [
+                    [ 
+                        "{\"1\", \"2\", \"3\"}",
+                        "{\"1\", \"2\"}",
+                        "{\"1\", \"2\", \"3\"}"
+                    ],
+                    "%IW101"
                 ],
             "I3": [
-                    "0..10",
-                    5,
-                    "{0, 5, 7}"
+                    [
+                        "0..10",
+                        5,
+                        "{0, 5, 7}"
+                    ],
+                    "%IW100"
                 ],
             "STATUS": [
-                    "{\"stopped\", \"running\"}",
-                    "stopped",
-                    "{\"stopped\", \"running\"}"
+                    [
+                        "{\"stopped\", \"running\"}",
+                        "stopped",
+                        "{\"stopped\", \"running\"}"
+                    ],
+                    "%IX100.1"
                 ]
-
         }
         """
 
@@ -261,23 +302,32 @@ class VariablesDeclarationTest(unittest.TestCase):
         places_str= """
         {
             "IDLE": [
-                [],
-                [],
+                [
+                    [],
+                    []
+                ],
                 "Initial place"
             ],
             "P1": [
-                ["O1", "O2"],
-                ["O3"],
+                    [
+                    ["O1", "O2"],
+                    ["O3"]
+                ],
+                ["O4:= 900"],
                 "Place 1 comment"
             ],
             "P2":[
-                ["O2", "O3"],
-                ["O1", "O2"],
+                    [
+                    ["O2", "O3"],
+                    ["O1", "O2"]
+                ],
                 "Place 2 comment"
             ],
             "P3": [
-                ["O1"],
-                ["O2", "O3"],
+                    [
+                    ["O1"],
+                    ["O2", "O3"]
+                ],
                 "Place 3 comment"
             ],
             "initial": [ "IDLE" ]
@@ -382,6 +432,7 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Test
         self.assertMultiLineEqual(expected, spec.manual(input_dict))
+
 
         
 

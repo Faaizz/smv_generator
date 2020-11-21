@@ -16,14 +16,14 @@ def input_declaration(in_dict):
 
     # loop through elements
     for key in iter(in_dict):
-        value= in_dict[key]
-        # Check if type is not a list
+        value= in_dict[key][0]
+        # Check if SMV type is not a list
         if not isinstance(value, list):
             # Type is boolean
             input_type= value
         
         else: 
-            # Type is specified as array of raw string values
+            # Type is specified as raw string
             input_type= value[0]
 
         temp= key + ": " + input_type + ";\n"
@@ -47,9 +47,8 @@ def place_declaration(in_dict):
     out_str= ""
 
     # Loop through items
-    for key,value in in_dict.items(): 
-        # Skip the "initial" attribute of places
-        if not (key == "initial"):
+    for key,value in in_dict.items():
+        if not key == "initial":
             temp= key + ": " + "boolean;\n"
             out_str= out_str + temp
 
