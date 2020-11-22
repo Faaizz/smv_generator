@@ -434,6 +434,133 @@ class VariablesDeclarationTest(unittest.TestCase):
         self.assertMultiLineEqual(expected, spec.manual(input_dict))
 
 
+    def test_auto_specs(self):
+
+        # Json Input
+        input_str= r"""
+        {
+            "places": {
+                "P1": [
+                    [
+                        ["OUT1"], ["OUT2"]
+                    ],
+                    "Initial place"
+                ],
+                "P2": [
+                    [
+                        ["OUT1"], ["OUT2"]
+                    ],
+                    ["X_SET:= 560"],
+                    "Move tool to X position"
+                ],
+                "STOP": [
+                    [
+                        [], ["OUT1", "OUT2"]
+                    ],
+                    ["X_SET:= 0"],
+                    "Stop machining"
+                ],
+                "initial": ["P1"]
+            },
+            "outputs": {
+                "OUT1": ["%QX100.0"],
+                "OUT2": ["%QX100.1"],
+                "X_SET": ["%QW100"]
+            },
+            "transitions": {
+                "T1": [
+                    ["P1"],
+                    [
+                        [
+                            ["IN1"], ["IN2"]
+                        ]
+                    ],
+                    ["P2"]
+                ],
+                "T2": [
+                    ["P2"],
+                    [
+                        [
+                            "X_POS= 560"
+                        ]
+                    ],
+                    ["STOP"]
+                ],
+                "T3": [
+                    ["STOP"],
+                    [
+                        [
+                            ["START"], []
+                        ]
+                    ],
+                    ["P1"]
+                ]
+            },
+            "inputs": {
+                "IN1": [
+                    "boolean", "%IX100.0"
+                ],
+                "IN2": [
+                    "boolean", "%IX100.1"
+                ],
+                "X_POS": [
+                    [
+                        "{0, 560}",
+                        0,
+                        "{0, 560}"
+                    ],
+                    "%IW100"
+                ]
+            },
+            "specifications": {
+                "auto": true,
+                "manual": [
+                    "AG(EF(STOP))"
+                ]
+            }
+        }
+        """
+
+        # Expected NuSMV
+        expected= "--CHECK LIVENESS\n" +\
+            "SPEC\n" +\
+            "AG(EF(T1));\n" +\
+            "SPEC\n" +\
+            "AG(EF(T2));\n" +\
+            "SPEC\n" +\
+            "AG(EF(T3));\n" +\
+            "--CHECK DEADLOCKS\n" +\
+            "SPEC\n" +\
+            "AG(EF( T1 | T2 | T3 ));\n" +\
+            "--CHECK DEAD TRANSITIONS\n" +\
+            "SPEC\n" +\
+            "EF(T1);\n" +\
+            "SPEC\n" +\
+            "EF(T2);\n" +\
+            "SPEC\n" +\
+            "EF(T3);\n" +\
+            "--CHECK UNSTABLE CYCLES\n" +\
+            "SPEC\n" +\
+            "AG(EF(stab));\n" +\
+            "--CHECK CONTRADICTORY OUTPUTS\n" +\
+            "SPEC\n" +\
+            "AG( ! (set_OUT1 & reset_OUT1) );\n" +\
+            "SPEC\n" +\
+            "AG( ! (set_OUT2 & reset_OUT2) );\n" +\
+            "--CHECK EMPTY OUTPUTS\n" +\
+            "SPEC\n" +\
+            "AG( set_OUT1 | reset_OUT1 );\n" +\
+            "SPEC\n" +\
+            "AG( set_OUT2 | reset_OUT2 );\n"
+
+        # Convert json to ordered dict
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, spec.auto(input_dict))
+            
+
+
         
 
 
