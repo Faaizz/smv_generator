@@ -661,7 +661,7 @@ class VariablesDeclarationTest(unittest.TestCase):
             "AG( ! (OUT2_set & OUT2_reset) );\n" +\
             "--CHECK EMPTY OUTPUTS\n" +\
             "SPEC\n" +\
-            "AG( OUT1_set | OUT1_set );\n" +\
+            "AG( OUT1_set | OUT1_reset );\n" +\
             "SPEC\n" +\
             "AG( OUT2_set | OUT2_reset );\n"
 
