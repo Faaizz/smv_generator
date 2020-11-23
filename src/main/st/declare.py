@@ -35,7 +35,7 @@ def input_declaration(in_dict):
             err_str="Invalid variable type specified for ST at" +  value 
             raise ValueError(err_str)
 
-        temp= key + " AT " + value  + ": " + input_type + ";\n"
+        temp= key + " AT " + value  + " : " + input_type + ";\n"
         out_str= out_str + temp
         
     
@@ -79,7 +79,7 @@ def output_declaration(in_dict):
             err_str="Invalid variable type specified for ST at" +  value 
             raise ValueError(err_str)
 
-        temp= key + " AT " + value  + ": " + input_type + ";\n"
+        temp= key + " AT " + value  + " : " + input_type + ";\n"
         out_str= out_str + temp
 
     return out_str
@@ -106,7 +106,7 @@ def place_declaration(in_dict):
     # Loop through items
     for key,value in in_dict.items():
         if not key == "initial":
-            temp= key + ": " + "BOOL:= "
+            temp= key + " : " + "BOOL := "
             # Inital value
             if key in initial:
                 temp= temp + "1;\n"
@@ -115,6 +115,6 @@ def place_declaration(in_dict):
 
             out_str= out_str + temp
 
-    out_str= out_str  + "STABLE: BOOL:= 0;\n"
+    out_str= out_str  + "STABLE : BOOL := 0;\n"
     
     return out_str

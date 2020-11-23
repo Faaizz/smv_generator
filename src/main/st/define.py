@@ -227,7 +227,7 @@ def output_definition(in_dict):
 
     # Non-boolean outputs
     # Get dictionary of outputs, the places that set them, and their assigned values
-    output_dict= dict()
+    output_list= list()
 
     for key in list(in_dict):
         if not key == "initial":
@@ -237,15 +237,15 @@ def output_definition(in_dict):
                 val= in_dict[key][1][0]
                 # Split string on :=
                 output_name, aa, output_val= val.partition(":=") 
-                output_dict[output_name]= [key, output_val]
+                output_list.append([output_name, key, output_val])
 
     nb_output_str= ""
     
     # Compose string to set outputs
-    for key in list(output_dict):
-        nb_output_str= nb_output_str + "(*" + key + "*)\n" + \
-            "IF " + output_dict[key][0] + " THEN\n" + \
-            "   " + key + ":=" + output_dict[key][1] + ";\n" + \
+    for output in output_list:
+        nb_output_str= nb_output_str + "(*" + output[0] + "*)\n" + \
+            "IF " + output[1] + " THEN\n" + \
+            "   " + output[0] + ":=" + output[2] + ";\n" + \
             "END_IF;\n"
 
     # Return
