@@ -46,11 +46,11 @@ class ST_Test(unittest.TestCase):
         """
 
         # Expected MuSMV
-        expected= 'S_AL1_ST1 AT %IX100.0: BOOL;\n' + \
-            'S_AL1_ST2 AT %IX100.1: BOOL;\n' + \
-            'STATUS AT %IX100.2: BOOL;\n' + \
-            'AL1_ST_X_POS AT %IW100: INT;\n' + \
-            'AL1_ST_Y_POS AT %IW101: INT;\n'
+        expected= 'S_AL1_ST1 AT %IX100.0 : BOOL;\n' + \
+            'S_AL1_ST2 AT %IX100.1 : BOOL;\n' + \
+            'STATUS AT %IX100.2 : BOOL;\n' + \
+            'AL1_ST_X_POS AT %IW100 : INT;\n' + \
+            'AL1_ST_Y_POS AT %IW101 : INT;\n'
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -119,10 +119,10 @@ class ST_Test(unittest.TestCase):
         """
 
         # Expected MuSMV
-        expected= 'AL1_ST_X_SET AT %QW100: INT;\n' + \
-            'AL1_ST_Y_SET AT %QW101: INT;\n' + \
-            'RP_AL1_ST_CLAMP AT %QX100.0: BOOL;\n' + \
-            'RC_AL1_ST AT %QX100.3: BOOL;\n'
+        expected= 'AL1_ST_X_SET AT %QW100 : INT;\n' + \
+            'AL1_ST_Y_SET AT %QW101 : INT;\n' + \
+            'RP_AL1_ST_CLAMP AT %QX100.0 : BOOL;\n' + \
+            'RC_AL1_ST AT %QX100.3 : BOOL;\n'
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -160,7 +160,7 @@ class ST_Test(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= "PS2: BOOL:= 1;\n" + "PS4: BOOL:= 0;\n" + "PSE0: BOOL:= 1;\n" + "STABLE: BOOL:= 0;\n"
+        expected= "PS2 : BOOL := 1;\n" + "PS4 : BOOL := 0;\n" + "PSE0 : BOOL := 1;\n" + "STABLE : BOOL := 0;\n"
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)

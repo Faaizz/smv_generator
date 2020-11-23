@@ -164,6 +164,7 @@ specification= """
 # Manual Specifications
 
 try:
+    specification= specification + spec.auto(input_dict)
     specification= specification + spec.manual(input_dict["specifications"])
 except KeyError as e:
     pass
