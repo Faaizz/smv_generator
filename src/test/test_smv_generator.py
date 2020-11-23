@@ -103,8 +103,8 @@ class VariablesDeclarationTest(unittest.TestCase):
             'ET: {"zero", "half", "full"};\n' +\
             "ASSIGN\n" +\
             "init(Q):= {TRUE, FALSE};\n" +\
-            'init(ET):= {"zero", "half", "full"};\n' +\
             "next(Q):= {TRUE, FALSE};\n" +\
+            'init(ET):= "zero";\n' +\
             'next(ET):= {"zero", "half", "full"};\n'
 
         expected_main= "timer_P1: timer_P1_mod;\n" +\
