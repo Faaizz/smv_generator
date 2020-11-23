@@ -107,7 +107,8 @@ class VariablesDeclarationTest(unittest.TestCase):
             'init(ET):= "zero";\n' +\
             'next(ET):= {"zero", "half", "full"};\n'
 
-        expected_main= "timer_P1: timer_P1_mod;\n" +\
+        expected_main= "\n\n-- INTERNAL\n" +\
+            "timer_P1: timer_P1_mod;\n" +\
             "count: 0..10;\n"
 
         # Convert Json string to python dictionary
@@ -395,7 +396,8 @@ class VariablesDeclarationTest(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= "init(count):= 0;\n" +\
+        expected= "\n\n-- INTERNALS\n" +\
+            "init(count):= 0;\n" +\
             "next(count):= case\n" +\
             "   stab: {0, 3, 7, 10};\n" +\
             "   TRUE: count;\n" +\

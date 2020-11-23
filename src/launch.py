@@ -97,6 +97,15 @@ declaration= declaration + """
 "-- " + str(list(input_dict["places"])) + "\n" + \
 declare.place_declaration(input_dict["places"])
 
+# Internal variable Declaration
+try:
+    internal_dict= input_dict["internals"]
+    internal_mod, internal_main= declare.internal_declaration(internal_dict)
+
+    declaration= internal_mod + declaration + internal_main
+except:
+    pass
+
 
 
 #====================================================================
@@ -149,6 +158,15 @@ assignment= assignment + """
 assignment= assignment + """ 
 -- PLACES
 """ + assign.place_assignment(input_dict["places"], input_dict["transitions"])
+
+# Internal variable Declaration
+try:
+    internal_dict= input_dict["internals"]
+    int_assign= assign.internal_assignment(internal_dict)
+
+    assignment= assignment + int_assign
+except:
+    pass
 
 
 #====================================================================

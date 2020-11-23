@@ -108,3 +108,38 @@ def place_assignment(places_dict, transitions_dict):
     out_str= init_str + assign_str
 
     return out_str
+
+
+def internal_assignment(in_dict):
+    """Initialize and give assignment directives to internal variables in NuSMV
+
+    Parameters:
+    ----------
+    in_dict: dict
+        "internals" attribute of root json object
+
+    Returns:
+    -------
+    out_str: str
+    """
+
+    out_str= ""
+
+    init_str= "\n\n-- INTERNALS\n"
+    next_str= ""
+
+    # Loop through elements to check for MODULES
+    for key in list(in_dict):
+        if isinstance(in_dict[key][0][0], str):
+            if not in_dict[key][0][0] == "MODULE":
+                # Initial
+                init_str += "init({0}):= {1};\n".format(key, in_dict[key][0][1])
+                # Next
+                next_str += "next({0}):= case\n".format(key) +\
+                    "   stab: {0};\n".format(in_dict[key][0][2]) +\
+                    "   TRUE: {0};\n".format(key) +\
+                    "esac;\n"
+
+    out_str= init_str + next_str
+
+    return out_str
