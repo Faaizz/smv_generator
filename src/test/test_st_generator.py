@@ -59,6 +59,53 @@ class ST_Test(unittest.TestCase):
         self.assertMultiLineEqual(expected, declare.input_declaration(input_dict))
 
 
+    def test_internal_declaration(self):
+
+        #Json input
+        input_str= r"""
+        {
+            "timer_P1": [
+                [
+                    "MODULE",
+                    {
+                        "Q": "boolean",
+                        "ET": [
+                            "{\"zero\", \"half\", \"full\"}",
+                            "zero",
+                            "{\"zero\", \"half\", \"full\"}"
+                        ]
+                    }
+                ],
+                [
+                    "TON",
+                    "timer_P1(IN:= P1, PT:= T#100ms)"
+                ]
+            ],
+            "count": [
+                [
+                    "0..10",
+                    0,
+                    "{0, 3, 7, 10}"
+                ],
+                [
+                    "INT",
+                    "count:=0"
+                ]
+            ]
+        }
+        """
+
+        # Expected NuSMV
+        expected= "timer_P1: TON;\n" +\
+            "count: INT;\n" 
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, declare.internal_declaration(input_dict))
+
+
     def test_output_declaration(self):
         
         # Json input
@@ -124,6 +171,54 @@ class ST_Test(unittest.TestCase):
 
     #================================================================
     ## DEFINITIONS
+
+
+    def test_internal_definition(self):
+
+        #Json input
+        input_str= r"""
+        {
+            "timer_P1": [
+                [
+                    "MODULE",
+                    {
+                        "Q": "boolean",
+                        "ET": [
+                            "{\"zero\", \"half\", \"full\"}",
+                            "zero",
+                            "{\"zero\", \"half\", \"full\"}"
+                        ]
+                    }
+                ],
+                [
+                    "TON",
+                    "timer_P1(IN:= P1, PT:= T#100ms)"
+                ]
+            ],
+            "count": [
+                [
+                    "0..10",
+                    0,
+                    "{0, 3, 7, 10}"
+                ],
+                [
+                    "INT",
+                    "count:=0"
+                ]
+            ]
+        }
+        """
+
+        # Expected NuSMV
+        expected= "timer_P1(IN:= P1, PT:= T#100ms);\n" +\
+            "count:=0;\n" 
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, define.internal_definition(input_dict))
+
 
     def test_transition_definition(self):
 

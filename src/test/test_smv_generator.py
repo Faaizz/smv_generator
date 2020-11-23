@@ -15,37 +15,37 @@ class VariablesDeclarationTest(unittest.TestCase):
         
         # Json input
         input_str= r"""
-        {
-            "S_AL1_ST1": ["boolean", "%IX100.0"],
-            "S_AL1_ST2": ["boolean", "%IX100.1"],
-            "STATUS": [
-                [
-                    "{\"stopped\", \"running\"}",
-                    "stopped",
-                    "{\"stopped\", \"running\"}"
+            {
+                "S_AL1_ST1": ["boolean", "%IX100.0"],
+                "S_AL1_ST2": ["boolean", "%IX100.1"],
+                "STATUS": [
+                    [
+                        "{\"stopped\", \"running\"}",
+                        "stopped",
+                        "{\"stopped\", \"running\"}"
+                    ],
+                    "%IX100.2"
                 ],
-                "%IX100.2"
-            ],
-            "AL1_ST_X_POS": [
-                [
-                    "{0, 400, 860}",
-                    0,
-                    "{0, 400, 860}"
+                "AL1_ST_X_POS": [
+                    [
+                        "{0, 400, 860}",
+                        0,
+                        "{0, 400, 860}"
+                    ],
+                    "%IW100",
+                    "INT"
                 ],
-                "%IW100",
-                "INT"
-            ],
-            "AL1_ST_Y_POS": [
-                [
-                    "{0, 300, 560}",
-                    0,
-                    "{0, 300, 560}"
-                ],
-                "%IW101",
-                "INT"
-            ]
-        }
-        """
+                "AL1_ST_Y_POS": [
+                    [
+                        "{0, 300, 560}",
+                        0,
+                        "{0, 300, 560}"
+                    ],
+                    "%IW101",
+                    "INT"
+                ]
+            }
+            """
 
         # Expected MuSMV
         expected= 'S_AL1_ST1: boolean;\n' + \
@@ -59,6 +59,65 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Test
         self.assertMultiLineEqual(expected, declare.input_declaration(input_dict))
+
+
+    def test_internal_declaration(self):
+
+        #Json input
+        input_str= r"""
+        {
+            "timer_P1": [
+                [
+                    "MODULE",
+                    {
+                        "Q": "boolean",
+                        "ET": [
+                            "{\"zero\", \"half\", \"full\"}",
+                            "zero",
+                            "{\"zero\", \"half\", \"full\"}"
+                        ]
+                    }
+                ],
+                [
+                    "TON",
+                    "timer_P1(IN:= P1, PT:= T#100ms)"
+                ]
+            ],
+            "count": [
+                [
+                    "0..10",
+                    0,
+                    "{0, 3, 7, 10}"
+                ],
+                [
+                    "INT",
+                    "count:=0"
+                ]
+            ]
+        }
+        """
+
+        # Expected NuSMV
+        expected_modules= "MODULE timer_P1_mod\n" +\
+            "VAR\n" + "Q: boolean;\n" +\
+            'ET: {"zero", "half", "full"};\n' +\
+            "ASSIGN\n" +\
+            "init(Q):= {TRUE, FALSE};\n" +\
+            'init(ET):= {"zero", "half", "full"};\n' +\
+            "next(Q):= {TRUE, FALSE};\n" +\
+            'next(ET):= {"zero", "half", "full"};\n'
+
+        expected_main= "timer_P1: timer_P1_mod;\n" +\
+            "count: 0..10;\n"
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        res_modules, res_main= declare.internal_declaration(input_dict)
+
+        self.assertMultiLineEqual(expected_modules, res_modules)
+        self.assertMultiLineEqual(expected_main, res_main)
 
     
     def test_place_declaration(self):
@@ -174,6 +233,7 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Test
         self.assertMultiLineEqual(expected, define.stab_definition(input_dict))
+
 
     def test_output_definition(self):
 
@@ -295,6 +355,58 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Test
         self.assertMultiLineEqual(expected, assign.input_assignment(input_dict))
+
+
+
+    def test_internal_assignment(self):
+
+        #Json input
+        input_str= r"""
+        {
+            "timer_P1": [
+                [
+                    "MODULE",
+                    {
+                        "Q": "boolean",
+                        "ET": [
+                            "{\"zero\", \"half\", \"full\"}",
+                            "zero",
+                            "{\"zero\", \"half\", \"full\"}"
+                        ]
+                    }
+                ],
+                [
+                    "TON",
+                    "timer_P1(IN:= P1, PT:= T#100ms)"
+                ]
+            ],
+            "count": [
+                [
+                    "0..10",
+                    0,
+                    "{0, 3, 7, 10}"
+                ],
+                [
+                    "INT",
+                    "count:=0"
+                ]
+            ]
+        }
+        """
+
+        # Expected NuSMV
+        expected= "init(count):= 0;\n" +\
+            "next(count):= case\n" +\
+            "   stab: {0, 3, 7, 10};\n" +\
+            "   TRUE: count;\n" +\
+            "esac;\n"
+
+        # Convert Json string to python dictionary
+        input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
+
+        # Test
+        self.assertMultiLineEqual(expected, assign.internal_assignment(input_dict))
+
 
 
     def test_place_assignment(self):
