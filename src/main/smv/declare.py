@@ -92,7 +92,9 @@ def internal_declaration(in_dict):
 
     
     # Declaration of additional modules
-    modules_assign= "ASSIGN\n"
+    modules_assign= ""
+    if len(modules) > 0: 
+        modules_assign= "ASSIGN\n"
 
     for module in modules:
         out_modules= out_modules + "MODULE {0}_mod\n".format(module)

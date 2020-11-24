@@ -91,13 +91,25 @@ class ST_Test(unittest.TestCase):
                     "INT",
                     "count:=0"
                 ]
+            ],
+            "control1": [
+                [
+                    "boolean",
+                    "{TRUE, FALSE}",
+                    "{TRUE, FALSE}"
+                ],
+                [
+                    "BOOL",
+                    "control1:=0"
+                ]
             ]
         }
         """
 
         # Expected NuSMV
         expected= "timer_P1: TON;\n" +\
-            "count: INT;\n" 
+            "count: INT;\n" +\
+            "control1: BOOL;\n" 
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -205,13 +217,25 @@ class ST_Test(unittest.TestCase):
                     "INT",
                     "count:=0"
                 ]
+            ],
+            "control1": [
+                [
+                    "boolean",
+                    "{TRUE, FALSE}",
+                    "{TRUE, FALSE}"
+                ],
+                [
+                    "BOOL",
+                    "control1:=0"
+                ]
             ]
         }
         """
 
         # Expected NuSMV
         expected= "timer_P1(IN:= P1, PT:= T#100ms);\n" +\
-            "count:=0;\n" 
+            "count:=0;\n" +\
+            "control1:=0;\n" 
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
