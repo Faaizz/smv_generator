@@ -256,3 +256,27 @@ def output_definition(in_dict):
 
     return out_str
 
+
+
+def internal_definition(in_dict):
+    """Initialize internal veriables in ST
+
+    Parameters:
+    ----------
+    in_dict: dict
+
+    Returns:
+    -------
+    out_str: string
+    """
+
+    out_str= ""
+
+    try:
+        # Loop through elements
+        for key in list(in_dict):
+            out_str += "{0};\n".format(in_dict[key][1][1])
+    except:
+        print("Syntax Error in Internal Variable Initialization in ST")
+
+    return out_str

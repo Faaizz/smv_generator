@@ -107,9 +107,9 @@ class ST_Test(unittest.TestCase):
         """
 
         # Expected NuSMV
-        expected= "timer_P1: TON;\n" +\
-            "count: INT;\n" +\
-            "control1: BOOL;\n" 
+        expected= "timer_P1 : TON;\n" +\
+            "count : INT;\n" +\
+            "control1 : BOOL;\n" 
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)

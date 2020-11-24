@@ -118,3 +118,29 @@ def place_declaration(in_dict):
     out_str= out_str  + "STABLE : BOOL := 0;\n"
     
     return out_str
+
+
+def internal_declaration(in_dict):
+    """Declare internal variables in ST
+
+    Parameters:
+    ----------
+    in_dict: dict
+        "internals" attribute of root object
+
+    Returns:
+    -------
+    out_str: str
+    """
+
+    out_str= ""
+
+    try:
+        # Loop through elements
+        for key in list(in_dict):
+            out_str += "{0} : {1};\n".format(key, in_dict[key][1][0])
+    except:
+        print("Syntax Error in Internal Variable Declaration in ST")
+
+    return out_str
+
