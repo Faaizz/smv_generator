@@ -284,11 +284,37 @@ END_VAR
 
 """
 
+# Internal variables Declaration
+try:
+    int_dec= st_declare.internal_declaration(input_dict["internals"])
+
+    declaration= declaration + """
+VAR
+
+(*INTERNAL VARIABLES*)
+
+""" + int_dec + \
+"""
+END_VAR
+
+"""
+except:
+    print("No internal variables to declare in ST")
 
 #====================================================================
-# TRANSITIONS
+# DEFINITIONS
+definition= ""
 
-definition= """
+# Internal variables Initialization
+try:
+    int_init= st_define.internal_definition(input_dict["internals"])
+
+    definition= definition + int_init
+except:
+    print("No internal variables to initialize in ST")
+
+# TRANSITIONS
+definition= definition + """
 
 (*=====================================================================*)
 (*TRANSITIONS*)
