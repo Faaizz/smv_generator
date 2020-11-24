@@ -93,6 +93,17 @@ class VariablesDeclarationTest(unittest.TestCase):
                     "INT",
                     "count:=0"
                 ]
+            ],
+            "control1": [
+                [
+                    "boolean",
+                    "{TRUE, FALSE}",
+                    "{TRUE, FALSE}"
+                ],
+                [
+                    "BOOL",
+                    "control1:=0"
+                ]
             ]
         }
         """
@@ -109,7 +120,8 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         expected_main= "\n\n-- INTERNAL\n" +\
             "timer_P1: timer_P1_mod;\n" +\
-            "count: 0..10;\n"
+            "count: 0..10;\n" +\
+            "control1: boolean;\n"
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
@@ -391,6 +403,17 @@ class VariablesDeclarationTest(unittest.TestCase):
                     "INT",
                     "count:=0"
                 ]
+            ],
+            "control1": [
+                [
+                    "boolean",
+                    "{TRUE, FALSE}",
+                    "{TRUE, FALSE}"
+                ],
+                [
+                    "BOOL",
+                    "control1:=0"
+                ]
             ]
         }
         """
@@ -398,9 +421,14 @@ class VariablesDeclarationTest(unittest.TestCase):
         # Expected NuSMV
         expected= "\n\n-- INTERNALS\n" +\
             "init(count):= 0;\n" +\
+            "init(control1):= {TRUE, FALSE};\n" +\
             "next(count):= case\n" +\
             "   stab: {0, 3, 7, 10};\n" +\
             "   TRUE: count;\n" +\
+            "esac;\n" +\
+            "next(control1):= case\n" +\
+            "   stab: {TRUE, FALSE};\n" +\
+            "   TRUE: control1;\n" +\
             "esac;\n"
 
         # Convert Json string to python dictionary

@@ -233,12 +233,15 @@ def output_definition(in_dict):
     for key in list(in_dict):
         if not key == "initial":
             # Check if exists
-            if in_dict[key][1] and isinstance(in_dict[key][1], list):
-                # Get string
-                val= in_dict[key][1][0]
-                # Split string on :=
-                output_name, aa, output_val= val.partition(":=") 
-                output_dict[output_name]= [key, output_val]
+            try:
+                if in_dict[key][1] and isinstance(in_dict[key][1], list):
+                    # Get string
+                    val= in_dict[key][1][0]
+                    # Split string on :=
+                    output_name, aa, output_val= val.partition(":=") 
+                    output_dict[output_name]= [key, output_val]
+            except: 
+                pass
 
     nb_output_str= "-- Non-Boolean Outputs\n"
 
