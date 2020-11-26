@@ -275,7 +275,8 @@ def internal_definition(in_dict):
     try:
         # Loop through elements
         for key in list(in_dict):
-            out_str += "{0};\n".format(in_dict[key][1][1])
+            if not in_dict[key][1][1] == "":
+                out_str += "{0};\n".format(in_dict[key][1][1])
     except:
         print("Syntax Error in Internal Variable Initialization in ST")
 
