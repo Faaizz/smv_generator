@@ -686,14 +686,14 @@ class VariablesDeclarationTest(unittest.TestCase):
             "AG(EF(stab));\n" +\
             "--CHECK CONTRADICTORY OUTPUTS\n" +\
             "SPEC\n" +\
-            "AG( ! (OUT1_set & OUT1_reset) );\n" +\
+            "AG( stab -> ! (OUT1_set & OUT1_reset) );\n" +\
             "SPEC\n" +\
-            "AG( ! (OUT2_set & OUT2_reset) );\n" +\
+            "AG( stab -> ! (OUT2_set & OUT2_reset) );\n" +\
             "--CHECK EMPTY OUTPUTS\n" +\
             "SPEC\n" +\
-            "AG( OUT1_set | OUT1_reset );\n" +\
+            "AG( stab -> OUT1_set | OUT1_reset );\n" +\
             "SPEC\n" +\
-            "AG( OUT2_set | OUT2_reset );\n"
+            "AG( stab -> OUT2_set | OUT2_reset );\n"
 
         # Convert json to ordered dict
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
