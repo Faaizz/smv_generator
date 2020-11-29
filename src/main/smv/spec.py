@@ -101,11 +101,11 @@ def auto(in_dict):
         for output in bool_outputs:
             contradictory= contradictory +\
                 "SPEC\n" +\
-                "AG( ! ({0}_set & {0}_reset) );\n".format(output)
+                "AG( stab -> ! ({0}_set & {0}_reset) );\n".format(output)
 
             empty= empty +\
                 "SPEC\n" +\
-                "AG( {0}_set | {0}_reset );\n".format(output)
+                "AG( stab -> {0}_set | {0}_reset );\n".format(output)
 
         # Output
         out_str= out_str + contradictory + empty
