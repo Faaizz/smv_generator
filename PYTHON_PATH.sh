@@ -1,0 +1,1 @@
+PYTHON_PATH="/home/faaizz/Programs/anaconda3/envs/smvDeploy/bin"

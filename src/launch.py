@@ -5,13 +5,7 @@
 import argparse, os, json
 from collections import OrderedDict
 
-import main.smv.declare as declare
-import main.smv.define as define
-import main.smv.assign as assign
-import main.smv.spec as spec
-
-import main.st.declare as st_declare
-import main.st.define as st_define
+import main.generate_smv_st as generate_smv_st
 
 #==============================================================================
 # COMMAND-LINE HELP, OPTIONS, ARGUMENTS
@@ -63,132 +57,11 @@ else:
 with open(run_options.input_json[0]) as f:
     input_dict= json.load(f, object_pairs_hook=OrderedDict)
 
-
-
-#====================================================================
-# NuSMV
-#====================================================================
-
-#====================================================================
-# DECLARATION
-
-declaration= """
-MODULE main
-
---=====================================================================
---DECLARATION
---=====================================================================
-
-VAR
-
-"""
-
-# Input Declaration
-declaration= declaration + """
--- INPUTS
-""" + \
-"-- " + str(list(input_dict["inputs"])) + "\n" + \
-declare.input_declaration(input_dict["inputs"])
-
-# Place Declaration
-declaration= declaration + """ 
--- PLACES
-""" + \
-"-- " + str(list(input_dict["places"])) + "\n" + \
-declare.place_declaration(input_dict["places"])
-
-# Internal variable Declaration
-try:
-    internal_dict= input_dict["internals"]
-    internal_mod, internal_main= declare.internal_declaration(internal_dict)
-
-    declaration= internal_mod + declaration + internal_main
-except:
-    pass
-
-
-
-#====================================================================
-# DEFINITION
-
-definition= """
-
---=====================================================================
---DEFINITION
---=====================================================================
-
-DEFINE
-
-"""
-
-# Transition Definition
-definition= definition + """
--- TRANSITIONS
-""" + define.transition_definition(input_dict["transitions"])
-
-# Stability Definition
-definition= definition + """ 
--- STABLE
-""" + define.stab_definition(input_dict["transitions"])
-# Output Definition
-definition= definition + """ 
--- OUTPUTS
-""" + define.output_definition(input_dict["places"])
-
-
-#====================================================================
-# ASSIGNMENT
-
-assignment= """
-
---=====================================================================
---ASSIGNMENT
---=====================================================================
-
-ASSIGN
-
-"""
-
-# Input Assignment
-assignment= assignment + """
--- INPUTS
-""" + assign.input_assignment(input_dict["inputs"])
-
-# Place Assignment
-assignment= assignment + """ 
--- PLACES
-""" + assign.place_assignment(input_dict["places"], input_dict["transitions"])
-
-# Internal variable Declaration
-try:
-    internal_dict= input_dict["internals"]
-    int_assign= assign.internal_assignment(internal_dict)
-
-    assignment= assignment + int_assign
-except:
-    pass
-
-
-#====================================================================
-# SPECIFICATIONS
-
-specification= """
-
---=====================================================================
---SPECIFICATIONS
---=====================================================================
-
-"""
-# Manual Specifications
-
-try:
-    specification= specification + spec.auto(input_dict)
-    specification= specification + spec.manual(input_dict["specifications"])
-except KeyError as e:
-    pass
-
 #====================================================================
 # OUTPUT
+
+# GENERATE OUTPUT
+output_smv= generate_smv_st.smv(input_dict)
 
 input_path= run_options.input_json[0]
 
@@ -207,141 +80,19 @@ new_file_path= dir_path + file_name + ".smv"
 if smv_enabled:
     # Write to output file
     with open(new_file_path, "w") as f:
-        f.write(declaration + definition + assignment + specification)
+        f.write(output_smv)
 
 
 
 
-
-#====================================================================
-# STRUCTURED TEXT
-#====================================================================
-
-#====================================================================
-# PROGRAM AND CONFIGURATION
-
-# PROGRAM START
-program_start= """
-PROGRAM program0
-
-"""
-# PROGRAM END
-program_end= """
-
-END_PROGRAM
-
-"""
-
-# CONFIGURATION
-configuration= """
-
-CONFIGURATION config0
-
-    RESOURCE res0 ON PLC
-        TASK task0(INTERVAL := T#20ms, PRIORITY := 0);
-        PROGRAM instance0 WITH task0 : program0;
-    END_RESOURCE
-
-END_CONFIGURATION
-
-"""
-
-#====================================================================
-# DECLARATION
-
-declaration= """
-
-(*=====================================================================*)
-(*DECLARATION*)
-(*=====================================================================*)
-
-VAR
-
-"""
-
-# Input/Output Declaration
-declaration= declaration + """
-(*INPUTS*)
-""" + \
-st_declare.input_declaration(input_dict["inputs"]) + \
-st_declare.output_declaration(input_dict["outputs"]) + \
-"""
-END_VAR
-"""
-
-
-# Place Declaration
-declaration= declaration + """
-
-VAR
-
-(*PLACES*)
-
-""" + \
-st_declare.place_declaration(input_dict["places"]) + \
-"""
-END_VAR
-
-"""
-
-# Internal variables Declaration
-try:
-    int_dec= st_declare.internal_declaration(input_dict["internals"])
-
-    declaration= declaration + """
-VAR
-
-(*INTERNAL VARIABLES*)
-
-""" + int_dec + \
-"""
-END_VAR
-
-"""
-except:
-    print("No internal variables to declare in ST")
-
-#====================================================================
-# DEFINITIONS
-definition= ""
-
-# Internal variables Initialization
-try:
-    int_init= st_define.internal_definition(input_dict["internals"])
-
-    definition= definition + int_init
-except:
-    print("No internal variables to initialize in ST")
-
-# TRANSITIONS
-definition= definition + """
-
-(*=====================================================================*)
-(*TRANSITIONS*)
-(*=====================================================================*)
-
-"""
-
-# Transition 
-definition= definition + st_define.transition_definition(input_dict["transitions"])
-
-
-definition= definition + """
-
-(*=====================================================================*)
-(*OUTPUTS*)
-(*=====================================================================*)
-
-"""
-
-# Outputs 
-definition= definition + st_define.output_definition(input_dict["places"])
 
 
 
 #====================================================================
 # OUTPUT
 
+# GENERATE ST
+output_st= generate_smv_st.st(input_dict)
 
 # New file path
 new_file_path= dir_path + file_name + ".st"
@@ -349,4 +100,4 @@ new_file_path= dir_path + file_name + ".st"
 if st_enabled:
     # Write to output file
     with open(new_file_path, "w") as f:
-        f.write(program_start + declaration + definition + program_end + configuration)
+        f.write(output_st)
