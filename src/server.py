@@ -20,9 +20,10 @@ ALLOWED_EXTENSIONS = {'json'}
 # Upload Folder
 FILES_FOLDER= os.getcwd()
 
-# a simple page that says hello
+# Index Route
 @app.route('/')
 def index():
+    
     return render_template(
         "index.html", 
         index_css=url_for("static", filename="index.css"),
@@ -37,6 +38,18 @@ def allowed_file(filename):
 
 @app.route("/generate", methods=["POST"])
 def generate():
+
+    # Delete previous outputs
+    out_st_path= os.path.join(FILES_FOLDER, "output.st")
+    # If output files exist, delete them
+    if os.path.isfile(out_st_path):
+        os.remove(out_st_path)
+
+    # Delete previous outputs
+    out_smv_path= os.path.join(FILES_FOLDER, "output.smv")
+    # If output files eixst, delete them
+    if os.path.isfile(out_smv_path):
+        os.remove(out_smv_path)
     
     if request.method == 'POST':
         # check if the post request has the file part
