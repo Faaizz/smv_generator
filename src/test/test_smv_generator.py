@@ -125,7 +125,7 @@ class VariablesDeclarationTest(unittest.TestCase):
 
         # Convert Json string to python dictionary
         input_dict= json.loads(input_str, object_pairs_hook=OrderedDict)
-
+        
         # Test
         res_modules, res_main= declare.internal_declaration(input_dict)
 
