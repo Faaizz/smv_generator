@@ -100,7 +100,7 @@ def internal_declaration(in_dict):
         out_modules= out_modules + "MODULE {0}_mod\n".format(module)
         out_modules= out_modules + "VAR\n"
 
-        mod_vars= in_dict["timer_P1"][0][1]
+        mod_vars= in_dict[module][0][1]
         for mod_var in list(mod_vars):
             # Simple string declaration of varianle
             if isinstance(mod_vars[mod_var], str) \
