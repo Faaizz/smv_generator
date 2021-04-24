@@ -92,13 +92,10 @@ def internal_declaration(in_dict):
 
     
     # Declaration of additional modules
-    modules_assign= ""
-    if len(modules) > 0: 
-        modules_assign= "ASSIGN\n"
-
     for module in modules:
         out_modules= out_modules + "MODULE {0}_mod\n".format(module)
         out_modules= out_modules + "VAR\n"
+        modules_assign= "ASSIGN\n"
 
         mod_vars= in_dict[module][0][1]
         for mod_var in list(mod_vars):
@@ -114,12 +111,10 @@ def internal_declaration(in_dict):
             else:
                 out_modules= out_modules + '{0}: {1};\n'.format(mod_var, mod_vars[mod_var][0])
                 # Assignment
-                modules_assign= modules_assign + 'init({0})'.format(mod_var) + ':= "zero";\n'
-                modules_assign= modules_assign + 'next({0})'.format(mod_var) + ':= {"zero", "half", "full"};\n'
+                modules_assign= modules_assign + 'init({0})'.format(mod_var) + ':= "{}";\n'.format(mod_vars[mod_var][1])
+                modules_assign= modules_assign + 'next({0})'.format(mod_var) + ':= {};\n'.format(mod_vars[mod_var][2])
 
-
-
-    out_modules= out_modules + modules_assign
+        out_modules= out_modules + modules_assign
 
 
     # Return
