@@ -26,6 +26,13 @@ The program translates the json input into ST code by performing the following a
 - Set the value of each output at every stable marking
 
 
+## How to Run
+You can generate NuSMV for model checking and ST PLC code by running:
+```shell
+python ./launch.py /path/to/json/file
+```
+Note that the output files are stored in the parent directory of the specified JSON file.
+
 ## JSON Syntax
 It should be noted that terms like *inputs*, *places*, *transitions*, and *outputs* in this section are used to represent the names of such entities. 
 
